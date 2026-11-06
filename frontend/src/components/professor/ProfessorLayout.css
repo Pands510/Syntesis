@@ -1,0 +1,279 @@
+.professor-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f7fb;
+}
+
+/* Menu lateral */
+.professor-sidebar {
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 26px 18px 20px;
+  background: #ffffff;
+  border-right: 1px solid #e8edf4;
+  transition: transform 0.3s ease;
+}
+
+.professor-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 42px;
+}
+
+.professor-brand-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+  background: #2563eb;
+  border-radius: 13px;
+}
+
+.professor-brand h2 {
+  margin: 0;
+  color: #172554;
+  font-size: 21px;
+  font-weight: 750;
+}
+
+.professor-brand span {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.professor-close-menu {
+  display: none;
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+
+/* Navegação */
+.professor-menu-label {
+  margin: 0 0 13px 10px;
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.professor-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.professor-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 550;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.professor-nav-item:hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.professor-nav-item.ativo {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* Rodapé do menu */
+.professor-sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #e8edf4;
+}
+
+.professor-user-avatar,
+.professor-header-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.professor-user-avatar {
+  width: 39px;
+  height: 39px;
+  font-size: 15px;
+}
+
+.professor-user-info {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.professor-user-info strong {
+  overflow: hidden;
+  color: #1e293b;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.professor-user-info span {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.professor-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.professor-logout:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Conteúdo principal */
+.professor-main {
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  margin-left: 260px;
+}
+
+.professor-header {
+  min-height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 38px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8edf4;
+}
+
+.professor-header > div:first-of-type span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.professor-header h1 {
+  margin: 5px 0 0;
+  color: #172554;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.professor-header-avatar {
+  width: 43px;
+  height: 43px;
+  font-size: 17px;
+}
+
+.professor-content {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 34px 38px;
+}
+
+.professor-menu-toggle {
+  display: none;
+  border: none;
+  background: transparent;
+  color: #334155;
+  cursor: pointer;
+}
+
+.professor-overlay {
+  display: none;
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .professor-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .professor-sidebar.aberto {
+    transform: translateX(0);
+  }
+
+  .professor-close-menu {
+    display: flex;
+  }
+
+  .professor-main {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .professor-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .professor-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(15, 23, 42, 0.4);
+  }
+}
+
+@media (max-width: 600px) {
+  .professor-header {
+    min-height: 85px;
+    padding: 16px 18px;
+    gap: 12px;
+  }
+
+  .professor-header h1 {
+    font-size: 17px;
+  }
+
+  .professor-header-avatar {
+    width: 37px;
+    height: 37px;
+  }
+
+  .professor-content {
+    padding: 24px 18px;
+  }
+}

@@ -1,0 +1,530 @@
+
+.professor-attendance {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.professor-attendance-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.professor-attendance-heading h2 {
+  margin: 0 0 8px;
+  color: #1e293b;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.professor-attendance-heading p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.professor-attendance-heading-icon,
+.professor-attendance-class-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.professor-attendance-selection {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.professor-attendance-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  color: #2563eb;
+}
+
+.professor-attendance-section-title h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 17px;
+}
+
+.professor-attendance-selection label {
+  display: block;
+  margin-bottom: 9px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.professor-attendance-selection select {
+  width: 100%;
+  max-width: 600px;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: #334155;
+  font-size: 14px;
+}
+
+.professor-attendance-selection select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.professor-attendance-class-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+}
+
+.professor-attendance-class-info span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.professor-attendance-class-info h3 {
+  margin: 5px 0;
+  color: #1e293b;
+  font-size: 17px;
+}
+
+.professor-attendance-class-info p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.professor-attendance-empty,
+.professor-attendance-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.professor-attendance-empty h3 {
+  margin: 5px 0 0;
+  color: #334155;
+  font-size: 16px;
+}
+
+.professor-attendance-empty p {
+  max-width: 440px;
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.professor-attendance-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.professor-attendance-message {
+  padding: 24px;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .professor-attendance-heading h2 {
+    font-size: 21px;
+  }
+
+  .professor-attendance-selection {
+    padding: 18px;
+  }
+
+  .professor-attendance-class-info {
+    align-items: flex-start;
+    padding: 18px;
+  }
+}
+
+
+.professor-attendance-calendar {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.professor-attendance-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.professor-attendance-calendar-header h3 {
+  margin: 0 0 6px;
+  color: #1e293b;
+  font-size: 18px;
+}
+
+.professor-attendance-calendar-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.professor-attendance-month-navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.professor-attendance-month-navigation strong {
+  min-width: 145px;
+  color: #334155;
+  font-size: 14px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.professor-attendance-month-navigation button {
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.professor-attendance-month-navigation button:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.professor-attendance-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.professor-attendance-weekday {
+  padding: 10px 4px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.professor-attendance-calendar-blank {
+  min-height: 72px;
+}
+
+.professor-attendance-calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 72px;
+  padding: 8px 3px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.professor-attendance-calendar-day span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.professor-attendance-calendar-day small {
+  font-size: 10px;
+  text-align: center;
+}
+
+.professor-attendance-calendar-day.has-class {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.professor-attendance-calendar-day.has-class:hover {
+  border-color: #2563eb;
+  background: #dbeafe;
+}
+
+.professor-attendance-calendar-day.selected {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.professor-attendance-calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 20px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.professor-attendance-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2563eb;
+}
+
+@media (max-width: 600px) {
+  .professor-attendance-calendar {
+    padding: 16px;
+  }
+
+  .professor-attendance-calendar-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .professor-attendance-month-navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .professor-attendance-calendar-grid {
+    gap: 4px;
+  }
+
+  .professor-attendance-calendar-day,
+  .professor-attendance-calendar-blank {
+    min-height: 55px;
+  }
+
+  .professor-attendance-calendar-day small {
+    font-size: 8px;
+  }
+}
+
+
+.professor-attendance-students {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.professor-attendance-students-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.professor-attendance-students-header h3 {
+  margin: 0 0 6px;
+  color: #1e293b;
+  font-size: 18px;
+}
+
+.professor-attendance-students-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.professor-attendance-student-count {
+  padding: 8px 13px;
+  border-radius: 20px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.professor-attendance-lessons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.professor-attendance-lesson {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 105px;
+  padding: 12px;
+  border: 1px solid #dbeafe;
+  border-radius: 9px;
+  background: #eff6ff;
+}
+
+.professor-attendance-lesson strong {
+  color: #1d4ed8;
+  font-size: 13px;
+}
+
+.professor-attendance-lesson span {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.professor-attendance-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.professor-attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.professor-attendance-table th {
+  padding: 13px 15px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.professor-attendance-table th small {
+  display: block;
+  margin-top: 5px;
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.professor-attendance-table td {
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 13px;
+}
+
+.professor-attendance-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.professor-attendance-status {
+  display: inline-block;
+  padding: 6px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.professor-attendance-status.PRESENTE {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.professor-attendance-status.FALTA {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.professor-attendance-status.JUSTIFICADA {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.professor-attendance-status.NAO_REGISTRADA {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+@media (max-width: 600px) {
+  .professor-attendance-students {
+    padding: 16px;
+  }
+
+  .professor-attendance-students-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .professor-attendance-table th,
+  .professor-attendance-table td {
+    padding: 12px 10px;
+  }
+}
+
+.professor-attendance-save {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.professor-attendance-save button {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.professor-attendance-save button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.professor-attendance-save button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.professor-attendance-success {
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  border: 1px solid #bbf7d0;
+  border-radius: 9px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 13px;
+}

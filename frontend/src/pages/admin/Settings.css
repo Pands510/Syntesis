@@ -1,0 +1,365 @@
+
+.settings-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: #1e293b;
+}
+
+.settings-heading {
+  margin-bottom: 26px;
+}
+
+.settings-heading h2 {
+  margin-bottom: 8px;
+  color: #172554;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.settings-heading p {
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.settings-section {
+  padding: 25px;
+  margin-bottom: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.settings-section-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding-bottom: 20px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.settings-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 11px;
+}
+
+.settings-section-header h3 {
+  margin-bottom: 5px;
+  color: #1e293b;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.settings-section-header p {
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.settings-profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  flex-shrink: 0;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-radius: 50%;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.settings-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.settings-profile-info h4 {
+  margin-bottom: 0;
+  color: #1e293b;
+  font-size: 17px;
+}
+
+.settings-profile-info span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #64748b;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.settings-profile-role {
+  color: #2563eb !important;
+  font-weight: 600;
+}
+
+.settings-password-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.settings-field label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.settings-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 46px;
+  padding: 0 12px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.settings-input-wrapper:focus-within {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.settings-input-wrapper > svg {
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.settings-input-wrapper input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0;
+  color: #1e293b;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 13px;
+}
+
+.settings-input-wrapper input::placeholder {
+  color: #94a3b8;
+}
+
+.settings-password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 5px;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+}
+
+.settings-password-toggle:hover {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.settings-feedback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.settings-feedback svg {
+  flex-shrink: 0;
+}
+
+.settings-feedback.success {
+  color: #166534;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.settings-feedback.error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.settings-password-info {
+  margin-top: 17px;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.settings-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 22px;
+  margin-top: 22px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.settings-save-button,
+.settings-logout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 17px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.settings-save-button {
+  color: #ffffff;
+  background: #2563eb;
+}
+
+.settings-save-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.settings-save-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.settings-save-button:focus-visible,
+.settings-logout-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.25);
+  outline-offset: 3px;
+}
+
+.settings-institution-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.settings-institution-info strong {
+  color: #1e293b;
+  font-size: 16px;
+}
+
+.settings-institution-info span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.settings-logout-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 25px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+}
+
+.settings-logout-section h3 {
+  margin-bottom: 5px;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.settings-logout-section p {
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.settings-logout-button {
+  flex-shrink: 0;
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.settings-logout-button:hover {
+  color: #ffffff;
+  background: #dc2626;
+}
+
+@media (max-width: 700px) {
+  .settings-heading h2 {
+    font-size: 21px;
+  }
+
+  .settings-section {
+    padding: 19px;
+  }
+
+  .settings-password-grid {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+
+  .settings-logout-section {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 19px;
+  }
+
+  .settings-logout-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .settings-profile {
+    align-items: flex-start;
+    gap: 13px;
+  }
+
+  .settings-profile-avatar {
+    width: 52px;
+    height: 52px;
+    font-size: 21px;
+  }
+
+  .settings-profile-info h4 {
+    font-size: 15px;
+  }
+
+  .settings-section-header h3 {
+    font-size: 14px;
+  }
+}

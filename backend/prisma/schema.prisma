@@ -1,0 +1,337 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ALUNO
+  PROFESSOR
+  ADMIN
+}
+
+enum EnrollmentStatus {
+  ATIVA
+  CONCLUIDA
+  CANCELADA
+}
+
+enum Shift {
+  MANHA
+  TARDE
+}
+
+enum WeekDay {
+  SEGUNDA
+  TERCA
+  QUARTA
+  QUINTA
+  SEXTA
+}
+
+enum AcademicUnit {
+  U1
+  U2
+  U3
+}
+
+enum AssessmentNumber {
+  AVALIACAO1
+  AVALIACAO2
+  AVALIACAO3
+}
+
+enum AttendanceStatus {
+  PRESENTE
+  FALTA
+  JUSTIFICADA
+}
+
+enum StudentStatus {
+  ATIVO
+  TRANCADO
+  CONCLUIDO
+}
+
+enum AcademicHistoryType {
+  INGRESSO
+  TRANCAMENTO
+  RETORNO
+  TRANSFERENCIA
+  CONCLUSAO
+}
+
+enum AcademicTermStatus {
+  PLANEJADO
+  EM_ANDAMENTO
+  ENCERRADO
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  isActive     Boolean  @default(true)
+
+  student   Student?
+  professor Professor?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Student {
+  id                 String  @id @default(uuid())
+  userId             String  @unique
+  registrationNumber String? @unique
+
+  // Campo antigo mantido durante a transição
+  course   String?
+  semester Int?
+  status   StudentStatus @default(ATIVO)
+
+  // Novo relacionamento com Course
+  courseId String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  academicCourse Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  
+  enrollments     Enrollment[]
+  academicHistory AcademicHistory[]
+
+  @@map("students")
+}
+
+model AcademicHistory {
+  id          String             @id @default(uuid())
+  studentId   String
+  type        AcademicHistoryType
+  previousCourseId String?
+  newCourseId      String?
+  semester    Int?
+  description String?
+  occurredAt  DateTime           @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
+
+  previousCourse Course? @relation("PreviousCourse", fields: [previousCourseId], references: [id], onDelete: Restrict)
+  newCourse      Course? @relation("NewCourse", fields: [newCourseId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+
+  @@index([studentId, occurredAt])
+  @@map("academic_history")
+}
+
+model Professor {
+  id                  String  @id @default(uuid())
+  userId              String  @unique
+  employeeNumber      String? @unique
+  department          String?
+  scheduleLockVersion Int     @default(0)
+
+  disciplineId String?
+  discipline   Discipline? @relation(fields: [disciplineId], references: [id], onDelete: Restrict)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  classes SchoolClass[]
+
+  @@map("professors")
+}
+
+model Course {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  code        String? @unique
+  description String?
+
+  mainShift Shift?
+
+  isActive    Boolean @default(true)
+
+  students    Student[]
+  disciplines Discipline[]
+
+
+  previousAcademicHistories AcademicHistory[] @relation("PreviousCourse")
+  newAcademicHistories      AcademicHistory[] @relation("NewCourse")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("courses")
+}
+
+model Discipline {
+  id            String  @id @default(uuid())
+  name          String
+  code          String  @unique
+  workloadHours Int
+  semester      Int @default(1)
+  isActive      Boolean @default(true)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
+
+  classes SchoolClass[]
+  professors Professor[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, courseId])
+  @@map("disciplines")
+}
+
+model AcademicTerm {
+  id         String            @id @default(uuid())
+  name       String
+  year       Int
+  termNumber Int
+  startDate  DateTime
+  endDate    DateTime
+  status     AcademicTermStatus @default(PLANEJADO)
+
+  schoolClasses SchoolClass[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([year, termNumber])
+  @@map("academic_terms")
+}
+
+model SchoolClass {
+  id             String  @id @default(uuid())
+  name           String
+  code           String  @unique
+  academicYear   Int
+  term           Int
+  semester       Int?
+  isActive       Boolean @default(true)
+
+  disciplineId   String
+  professorId    String
+  academicTermId String?
+
+  discipline Discipline @relation(fields: [disciplineId], references: [id], onDelete: Restrict)
+  professor  Professor  @relation(fields: [professorId], references: [id], onDelete: Restrict)
+  academicTerm AcademicTerm? @relation(fields: [academicTermId], references: [id], onDelete: Restrict)
+
+  enrollments     Enrollment[]
+  scheduleEntries ScheduleEntry[]
+  assessments     Assessment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("school_classes")
+}
+
+model Enrollment {
+  id         String           @id @default(uuid())
+  studentId  String
+  classId    String
+  status     EnrollmentStatus @default(ATIVA)
+  enrolledAt DateTime         @default(now())
+
+  student     Student     @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  schoolClass SchoolClass @relation(fields: [classId], references: [id], onDelete: Restrict)
+
+  grades         Grade[]
+  finalExamGrade FinalExamGrade?
+  attendances    Attendance[]
+
+  @@unique([studentId, classId])
+  @@map("enrollments")
+}
+
+model ScheduleEntry {
+  id String @id @default(uuid())
+
+  classId      String
+  weekDay      WeekDay
+  shift        Shift
+  lessonNumber Int
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([classId, weekDay, shift, lessonNumber])
+  @@map("schedule_entries")
+}
+
+model Assessment {
+  id      String           @id @default(uuid())
+  classId String
+  unit    AcademicUnit
+  number  AssessmentNumber
+  title   String
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+  grades      Grade[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Impede mais de três avaliações por unidade na mesma turma.
+  @@unique([classId, unit, number])
+  @@map("assessments")
+}
+
+model Grade {
+  id           String  @id @default(uuid())
+  assessmentId String
+  enrollmentId String
+  score        Decimal @db.Decimal(4, 2)
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Uma nota por aluno em cada avaliação.
+  @@unique([assessmentId, enrollmentId])
+  @@map("grades")
+}
+
+model FinalExamGrade {
+  id           String  @id @default(uuid())
+  enrollmentId String  @unique
+  score        Decimal @db.Decimal(4, 2)
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("final_exam_grades")
+}
+
+model Attendance {
+  id           String           @id @default(uuid())
+  enrollmentId String
+  date         DateTime         @db.Date
+  shift        Shift
+  lessonNumber Int
+  status       AttendanceStatus
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([enrollmentId, date, shift, lessonNumber])
+  @@map("attendances")
+}

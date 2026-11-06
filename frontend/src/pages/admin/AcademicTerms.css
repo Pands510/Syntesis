@@ -1,0 +1,181 @@
+
+.academic-terms-page {
+  width: 100%;
+}
+
+.academic-terms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.academic-terms-header h2 {
+  margin: 0 0 8px;
+  font-size: 25px;
+}
+
+.academic-terms-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.academic-terms-primary-button {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.academic-terms-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.academic-terms-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.academic-terms-table th,
+.academic-terms-table td {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.academic-terms-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
+}
+
+.academic-terms-status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.academic-terms-status.em_andamento {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.academic-terms-status.planejado {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.academic-terms-status.encerrado {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.academic-terms-error {
+  color: #dc2626;
+}
+
+@media (max-width: 700px) {
+  .academic-terms-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+
+.academic-terms-form {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.academic-terms-form h3 {
+  margin: 0 0 22px;
+  font-size: 19px;
+  color: #1e293b;
+}
+
+.academic-terms-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.academic-terms-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.academic-terms-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.academic-terms-field input,
+.academic-terms-field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.academic-terms-field input:focus,
+.academic-terms-field select:focus {
+  border-color: #2563eb;
+}
+
+.academic-terms-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.academic-terms-cancel-button {
+  padding: 12px 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.academic-terms-primary-button:disabled,
+.academic-terms-cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.academic-terms-success {
+  color: #15803d;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 700px) {
+  .academic-terms-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .academic-terms-form-actions {
+    flex-direction: column-reverse;
+  }
+}

@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 
 import {
@@ -8,7 +7,8 @@ import {
   editAcademicTerm,
   activateAcademicTerm,
   finishAcademicTerm,
-  removeAcademicTerm
+  removeAcademicTerm,
+  previewAcademicTerm
 } from "../controllers/academicTermController.js";
 
 import {
@@ -23,6 +23,11 @@ router.use(authorizeRoles("ADMIN"));
 
 router.post("/", registerAcademicTerm);
 router.get("/", getAcademicTerms);
+
+// Prévia da progressão curricular
+router.get("/:id/progressao/previa", previewAcademicTerm);
+
+// Demais rotas por ID
 router.get("/:id", getAcademicTermById);
 router.patch("/:id", editAcademicTerm);
 router.patch("/:id/iniciar", activateAcademicTerm);

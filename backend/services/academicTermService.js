@@ -1,5 +1,3 @@
-//diante mão, já digo q não me responsabilizo por nenhuma desgraça q venha a cair por algo vindo dessa pasta
-//qnd fiz isso, só eu e Deus sabia o que eu tava fazendo, hoje só Deus sabe
 
 import prisma from "../database/prisma.js";
 
@@ -209,10 +207,188 @@ export async function startAcademicTerm(id) {
   });
 }
 
+
+async function gerarPlanoProgressao(tx, term) {
+  const students = await tx.student.findMany({
+    select: {
+      id: true,
+      registrationNumber: true,
+      semester: true,
+      status: true,
+      courseId: true,
+      user: {
+        select: { name: true }
+      },
+      academicCourse: {
+        select: {
+          id: true,
+          name: true,
+          totalSemesters: true
+        }
+      }
+    },
+    orderBy: {
+      user: { name: "asc" }
+    }
+  });
+
+  const relatorio = {
+    periodo: term.name,
+    totalAlunos: students.length,
+    totalElegiveis: 0,
+    progressõesPrevistas: [],
+    ultimoSemestre: [],
+    chegaramAoUltimoSemestre: [],
+    trancados: [],
+    concluidos: [],
+    dadosInconsistentes: [],
+    progressõesJaRegistradas: []
+  };
+
+  const progressões = [];
+
+  for (const student of students) {
+    const aluno = {
+      studentId: student.id,
+      nome: student.user.name,
+      matricula: student.registrationNumber,
+      curso: student.academicCourse?.name ?? null,
+      semestreAtual: student.semester
+    };
+
+    if (student.status === "TRANCADO") {
+      relatorio.trancados.push(aluno);
+      continue;
+    }
+
+    if (student.status === "CONCLUIDO") {
+      relatorio.concluidos.push(aluno);
+      continue;
+    }
+
+    if (student.status !== "ATIVO") {
+      relatorio.dadosInconsistentes.push({
+        ...aluno,
+        motivo: "Situação acadêmica inválida."
+      });
+      continue;
+    }
+
+    if (!student.courseId || !student.academicCourse) {
+      relatorio.dadosInconsistentes.push({
+        ...aluno,
+        motivo: "Aluno sem curso vinculado."
+      });
+      continue;
+    }
+
+    const semestre = student.semester;
+    const totalSemestres = student.academicCourse.totalSemesters;
+
+    if (
+      !Number.isInteger(semestre) ||
+      semestre < 1 ||
+      !Number.isInteger(totalSemestres) ||
+      totalSemestres < 1 ||
+      semestre > totalSemestres
+    ) {
+      relatorio.dadosInconsistentes.push({
+        ...aluno,
+        motivo: "Semestre curricular inválido para o curso."
+      });
+      continue;
+    }
+
+    if (semestre === totalSemestres) {
+      relatorio.ultimoSemestre.push(aluno);
+      continue;
+    }
+
+    const progressaoExistente =
+      await tx.academicHistory.findFirst({
+        where: {
+          studentId: student.id,
+          academicTermId: term.id,
+          type: "PROGRESSAO"
+        }
+      });
+
+    if (progressaoExistente) {
+      relatorio.progressõesJaRegistradas.push(aluno);
+      continue;
+    }
+
+    const novoSemestre = semestre + 1;
+
+    relatorio.totalElegiveis++;
+
+    progressões.push({
+      studentId: student.id,
+      courseId: student.courseId,
+      semestreAnterior: semestre,
+      novoSemestre,
+      aluno
+    });
+
+    relatorio.progressõesPrevistas.push({
+      ...aluno,
+      semestreAnterior: semestre,
+      novoSemestre
+    });
+
+    if (novoSemestre === totalSemestres) {
+      relatorio.chegaramAoUltimoSemestre.push({
+        ...aluno,
+        semestreAnterior: semestre,
+        novoSemestre
+      });
+    }
+  }
+
+  return {
+    relatorio,
+    progressões
+  };
+}
+
+
+export async function previewAcademicTermProgression(id) {
+  return prisma.$transaction(async (tx) => {
+    const term = await tx.academicTerm.findUnique({
+      where: { id }
+    });
+
+    if (!term) {
+      throw criarErro("Período letivo não encontrado.", 404);
+    }
+
+    if (term.status !== STATUS.EM_ANDAMENTO) {
+      throw criarErro(
+        "A prévia só pode ser gerada para períodos em andamento.",
+        409
+      );
+    }
+
+    const { relatorio } = await gerarPlanoProgressao(tx, term);
+
+    return {
+      periodo: term,
+      relatorio
+    };
+  });
+}
+
+
 export async function closeAcademicTerm(id) {
   return prisma.$transaction(async (tx) => {
+    // Impede encerramentos simultâneos de períodos letivos.
     await tx.$executeRaw`
       LOCK TABLE academic_terms IN EXCLUSIVE MODE
+    `;
+
+    // Impede alterações simultâneas na tabela de alunos.
+    await tx.$executeRaw`
+      LOCK TABLE students IN SHARE ROW EXCLUSIVE MODE
     `;
 
     const term = await tx.academicTerm.findUnique({
@@ -230,12 +406,62 @@ export async function closeAcademicTerm(id) {
       );
     }
 
-    return tx.academicTerm.update({
-      where: { id },
-      data: { status: STATUS.ENCERRADO }
+    // Gera o plano usando a mesma lógica da futura prévia.
+    const { relatorio, progressões } =
+      await gerarPlanoProgressao(tx, term);
+
+    // Inicializa a lista mesmo quando não houver progressões.
+    relatorio.progressõesRealizadas = [];
+
+    // Executa as progressões previstas.
+    for (const progressao of progressões) {
+      await tx.student.update({
+        where: {
+          id: progressao.studentId
+        },
+        data: {
+          semester: progressao.novoSemestre
+        }
+      });
+
+      await tx.academicHistory.create({
+        data: {
+          studentId: progressao.studentId,
+          type: "PROGRESSAO",
+          previousCourseId: progressao.courseId,
+          newCourseId: progressao.courseId,
+          academicTermId: term.id,
+          semester: progressao.novoSemestre,
+          description:
+            `Progressão curricular do ${progressao.semestreAnterior}º para o ` +
+            `${progressao.novoSemestre}º semestre no período ${term.name}.`
+        }
+      });
+
+      relatorio.progressõesRealizadas.push({
+        ...progressao.aluno,
+        semestreAnterior: progressao.semestreAnterior,
+        novoSemestre: progressao.novoSemestre
+      });
+    }
+
+    // Encerra o período somente após concluir todas as progressões.
+    const periodoEncerrado = await tx.academicTerm.update({
+      where: {
+        id: term.id
+      },
+      data: {
+        status: STATUS.ENCERRADO
+      }
     });
+
+    return {
+      periodo: periodoEncerrado,
+      relatorio
+    };
   });
 }
+
 
 export async function deleteAcademicTerm(id) {
   const term = await getAcademicTerm(id);

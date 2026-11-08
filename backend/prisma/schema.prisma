@@ -61,6 +61,7 @@ enum AcademicHistoryType {
   RETORNO
   TRANSFERENCIA
   CONCLUSAO
+  PROGRESSAO
 }
 
 enum AcademicTermStatus {
@@ -110,24 +111,28 @@ model Student {
 }
 
 model AcademicHistory {
-  id          String             @id @default(uuid())
-  studentId   String
-  type        AcademicHistoryType
+  id              String             @id @default(uuid())
+  studentId       String
+  type            AcademicHistoryType
   previousCourseId String?
   newCourseId      String?
-  semester    Int?
-  description String?
-  occurredAt  DateTime           @default(now())
+  academicTermId   String?
+  semester         Int?
+  description      String?
+  occurredAt       DateTime           @default(now())
 
   student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
 
   previousCourse Course? @relation("PreviousCourse", fields: [previousCourseId], references: [id], onDelete: Restrict)
   newCourse      Course? @relation("NewCourse", fields: [newCourseId], references: [id], onDelete: Restrict)
+  academicTerm   AcademicTerm? @relation(fields: [academicTermId], references: [id], onDelete: Restrict)
 
   createdAt DateTime @default(now())
 
   @@index([studentId, occurredAt])
+  @@index([academicTermId])
   @@map("academic_history")
+  @@unique([studentId, academicTermId, type])
 }
 
 model Professor {
@@ -148,14 +153,13 @@ model Professor {
 }
 
 model Course {
-  id          String  @id @default(uuid())
-  name        String  @unique
-  code        String? @unique
-  description String?
-
-  mainShift Shift?
-
-  isActive    Boolean @default(true)
+  id             String  @id @default(uuid())
+  name           String  @unique
+  code           String? @unique
+  description    String?
+  mainShift      Shift?
+  isActive       Boolean @default(true)
+  totalSemesters Int     @default(1)
 
   students    Student[]
   disciplines Discipline[]
@@ -201,6 +205,7 @@ model AcademicTerm {
   status     AcademicTermStatus @default(PLANEJADO)
 
   schoolClasses SchoolClass[]
+  academicHistory AcademicHistory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

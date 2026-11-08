@@ -9,6 +9,7 @@ import {
 
 import {
   getUsers,
+  getStudents,
   changeUserStatus,
   getStats
 } from "../controllers/adminController.js";
@@ -22,37 +23,40 @@ import {
   registerStudent,
   editStudent,
   changeStudentStatus
-} from "../controllers/studentController.js"; //apesar de mostrar q tem erro, tá funcionando, vai saber
+} from "../controllers/studentController.js";
 
 const router = Router();
 
-//todas as rotas embaixo exigem perfil de administrador
+// Todas estas rotas exigem perfil de administrador
 router.use(authenticateToken, authorizeRoles("ADMIN"));
 
-//indicadores do painel administrativo
+// Indicadores do painel administrativo
 router.get("/stats", getStats);
 
-//cadastrar professor
+// Cadastrar professor
 router.post("/professors", registerProfessor);
 
-//editar professor
+// Editar professor
 router.put("/professors/:id", editProfessor);
 
-//registrar alunos
+// Registrar alunos
 router.post("/students", registerStudent);
 
-//editar alunos
+// Editar alunos
 router.put("/students/:id", editStudent);
 
 router.patch("/students/:id/status", changeStudentStatus);
 
-//listar professores ativos
+// Listar professores ativos
 router.get("/professors", getProfessors);
 
-//listar usuários
+// Listar usuários
 router.get("/users", getUsers);
 
-//ativar ou desativar usuário
+// Ativar ou desativar usuário
 router.patch("/users/:id/status", changeUserStatus);
+
+// Listar alunos com informações acadêmicas
+router.get("/students", getStudents);
 
 export default router;

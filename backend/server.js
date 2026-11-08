@@ -1,4 +1,4 @@
-//eu quero acreditar que tá tudo certo, fiz de um jeito no início e depois só fui segurando na gambiarra
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -74,6 +74,20 @@ async function startServer() {
     await prisma.$connect();
 
     console.log("Conexão com PostgreSQL estabelecida.");
+
+    const diagnostico = await prisma.$queryRaw`
+    SELECT
+      current_database() AS banco,
+      current_schema() AS esquema,
+      (SELECT COUNT(*)::int FROM academic_terms) AS total_periodos,
+      EXISTS (
+        SELECT 1
+        FROM academic_terms
+        WHERE id = 'rollback-test-2099'
+      ) AS periodo_teste                          
+  `;
+
+console.log("Diagnóstico do banco utilizado pelo servidor:", diagnostico);
 
     server = app.listen(PORT, () => {
       console.log(`Servidor executando em http://localhost:${PORT}`);

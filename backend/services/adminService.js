@@ -130,3 +130,41 @@ export async function getDashboardStats() {
     usuariosAtivos
   };
 }
+
+
+export async function listStudents() {
+  return prisma.student.findMany({
+    select: {
+      id: true,
+      registrationNumber: true,
+      semester: true,
+      status: true,
+
+      academicCourse: {
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          totalSemesters: true,
+          isActive: true
+        }
+      },
+
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          isActive: true,
+          createdAt: true
+        }
+      }
+    },
+
+    orderBy: {
+      user: {
+        name: "asc"
+      }
+    }
+  });
+}

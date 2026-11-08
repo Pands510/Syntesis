@@ -1,11 +1,11 @@
 
 import {
   listUsers,
+  listStudents,
   updateUserStatus,
   getDashboardStats
 } from "../services/adminService.js";
 
-//listando geral do banco
 export async function getUsers(req, res) {
   try {
     const users = await listUsers();
@@ -23,7 +23,6 @@ export async function getUsers(req, res) {
   }
 }
 
-//basicamente uma função pra banir
 export async function changeUserStatus(req, res) {
   try {
     const { id } = req.params;
@@ -63,7 +62,7 @@ export async function changeUserStatus(req, res) {
   }
 }
 
-//retorna os indicadores do painel administrativo
+// Retorna os indicadores do painel administrativo
 export async function getStats(req, res) {
   try {
     const estatisticas = await getDashboardStats();
@@ -76,6 +75,24 @@ export async function getStats(req, res) {
 
     return res.status(500).json({
       mensagem: "Erro ao consultar as estatísticas do painel."
+    });
+  }
+}
+
+export async function getStudents(req, res) {
+  try {
+    const students = await listStudents();
+
+    return res.status(200).json({
+      quantidade: students.length,
+      alunos: students
+    });
+
+  } catch (error) {
+    console.error("Erro ao listar alunos:", error);
+
+    return res.status(500).json({
+      mensagem: "Erro ao consultar alunos."
     });
   }
 }

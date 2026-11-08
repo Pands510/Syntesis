@@ -1,6 +1,3 @@
-//diante mão, já digo q não me responsabilizo por nenhuma desgraça q venha a cair por algo vindo dessa pasta
-//qnd fiz isso, só eu e Deus sabia o que eu tava fazendo, hoje só Deus sabe
-
 import prisma from "../database/prisma.js";
 
 const HORARIOS = {
@@ -269,7 +266,11 @@ export async function listClassSchedule(classId, user) {
     include: {
       schoolClass: {
         include: {
-          discipline: true,
+          discipline: {
+            include:{
+              course:true
+            }
+          },
           professor: {
             include: {
               user: {
@@ -314,6 +315,7 @@ export async function getStudentSchedule(userId) {
   const entries = await prisma.scheduleEntry.findMany({
     where: {
       schoolClass: {
+        isActive: true,
         enrollments: {
           some: {
             studentId: student.id,
@@ -369,4 +371,101 @@ export async function deleteScheduleEntry(id) {
       id: entry.id
     }
   });
+}
+
+// Consultar quadro semanal completo do administrador
+export async function listAllSchedules() {
+  const entries = await prisma.scheduleEntry.findMany({
+    where: {
+      schoolClass: {
+        isActive: true
+      }
+    },
+    include: {
+      schoolClass: {
+        include: {
+          discipline: {
+            include: {
+              course: true
+            }
+          },
+          professor: {
+            include: {
+              user: {
+                select: {
+                  name: true
+                }
+              }
+            }
+          },
+          academicTerm: true
+        }
+      }
+    },
+    orderBy: [
+      { weekDay: "asc" },
+      { shift: "asc" },
+      { lessonNumber: "asc" }
+    ]
+  });
+
+  return entries.map(formatarHorario);
+}
+
+
+// Consultar agenda semanal do professor autenticado
+export async function getProfessorSchedule(userId) {
+  if (!validarUUID(userId)) {
+    throw criarErro("Identificador do usuário inválido.", 400);
+  }
+
+  const professor = await prisma.professor.findUnique({
+    where: {
+      userId
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if (!professor) {
+    throw criarErro("Perfil de professor não encontrado.", 404);
+  }
+
+  const entries = await prisma.scheduleEntry.findMany({
+    where: {
+      schoolClass: {
+        isActive: true,
+        professorId: professor.id
+      }
+    },
+    include: {
+      schoolClass: {
+        include: {
+          discipline: {
+            include: {
+              course: true
+            }
+          },
+          professor: {
+            include: {
+              user: {
+                select: {
+                  name: true
+                }
+              }
+            }
+          },
+          academicTerm: true
+        }
+      }
+    },
+    orderBy: [
+      { weekDay: "asc" },
+      { shift: "asc" },
+      { lessonNumber: "asc" }
+    ]
+  });
+
+  return entries.map(formatarHorario);
 }

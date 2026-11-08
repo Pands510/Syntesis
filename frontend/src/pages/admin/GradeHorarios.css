@@ -1,0 +1,336 @@
+
+.grade-horarios-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  color: #1e293b;
+}
+
+.grade-heading,
+.grade-toolbar,
+.grade-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.grade-heading h2 {
+  margin: 0 0 7px;
+  font-size: 25px;
+}
+
+.grade-heading p {
+  margin: 0;
+  color: #64748b;
+}
+
+.grade-heading-icon,
+.grade-toolbar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 13px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.grade-toolbar,
+.grade-form,
+.grade-filters,
+.grade-table-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.grade-toolbar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.grade-toolbar-info strong {
+  font-size: 16px;
+}
+
+.grade-toolbar-info span {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.grade-toolbar-actions,
+.grade-form-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.grade-add-button,
+.grade-refresh-button,
+.grade-cancel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 9px;
+  padding: 11px 15px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.grade-add-button {
+  color: #fff;
+  background: #4f46e5;
+}
+
+.grade-add-button:hover {
+  background: #4338ca;
+}
+
+.grade-add-button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.grade-refresh-button {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.grade-cancel-button {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.grade-form h3 {
+  margin: 0 0 18px;
+}
+
+.grade-form-grid,
+.grade-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.grade-form-grid label,
+.grade-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.grade-form-grid select,
+.grade-filters select {
+  width: 100%;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  outline: none;
+}
+
+.grade-form-grid select:focus,
+.grade-filters select:focus {
+  border-color: #6366f1;
+}
+
+.grade-form-footer {
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.grade-filters {
+  padding: 16px;
+}
+
+.grade-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.grade-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.grade-table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: collapse;
+}
+
+.grade-table th,
+.grade-table td {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  vertical-align: top;
+}
+
+.grade-table thead th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.grade-time-cell {
+  width: 125px;
+  background: #f8fafc;
+  white-space: nowrap;
+}
+
+.grade-time-cell strong,
+.grade-time-cell span {
+  display: block;
+}
+
+.grade-time-cell span {
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.grade-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 75px;
+}
+
+.grade-empty-slot {
+  color: #cbd5e1;
+  padding-top: 20px;
+}
+
+.grade-class-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 11px;
+  padding-right: 30px;
+  background: #eef2ff;
+  border-left: 3px solid #6366f1;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.grade-class-card > strong {
+  color: #3730a3;
+  font-size: 12px;
+}
+
+.grade-class-card > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #475569;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.grade-delete-button {
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  display: flex;
+  padding: 5px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #dc2626;
+  cursor: pointer;
+}
+
+.grade-delete-button:hover {
+  background: #fee2e2;
+}
+
+.grade-delete-button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.grade-feedback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.grade-feedback.error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.grade-feedback.success {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.grade-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 45px 20px;
+  color: #64748b;
+}
+
+.grade-spinner {
+  animation: grade-spin 1s linear infinite;
+}
+
+@keyframes grade-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .grade-form-grid,
+  .grade-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .grade-heading,
+  .grade-toolbar {
+    align-items: flex-start;
+  }
+
+  .grade-toolbar {
+    flex-direction: column;
+  }
+
+  .grade-form-grid,
+  .grade-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-form-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .grade-form-footer button {
+    width: 100%;
+  }
+}

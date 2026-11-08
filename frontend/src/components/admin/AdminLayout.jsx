@@ -9,7 +9,8 @@ import {
   Menu,
   X,
   CalendarDays,
-  School
+  School,
+  CalendarClock
 } from "lucide-react";
 import { useState } from "react";
 
@@ -32,6 +33,7 @@ function AdminLayout() {
     { titulo: "Cursos", icone: GraduationCap, caminho: "/admin/cursos" },
     { titulo: "Disciplinas", icone: GraduationCap, caminho: "/admin/disciplinas" },
     { titulo: "Turmas", icone: School, caminho: "/admin/turmas" },
+    { titulo: "Quadro de horários", icone: CalendarClock, caminho: "/admin/grade-horarios" },
     { titulo: "Cadastrar professor", icone: UserPlus, caminho: "/admin/professores" },
     { titulo: "Períodos letivos", icone: CalendarDays, caminho: "/admin/periodos-letivos" },
     { titulo: "Configurações", icone: Settings, caminho: "/admin/configuracoes" }

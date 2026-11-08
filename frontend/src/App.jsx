@@ -36,6 +36,7 @@ import Disciplines from "./pages/admin/Disciplines";
 import Settings from "./pages/admin/Settings";
 import AcademicTerms from "./pages/admin/AcademicTerms";
 import Turmas from "./pages/admin/Turmas";
+import GradeHorarios from "./pages/admin/GradeHorarios";
 
 function HomeRedirect() {
   const { usuario, autenticado, carregando } = useAuth();
@@ -99,6 +100,7 @@ function App() {
             <Route path="configuracoes" element={<Settings />} />
             <Route path="alunos" element={<AdminStudents />} />
             <Route path="turmas" element={<Turmas />} />
+            <Route path="grade-horarios" element={<GradeHorarios />} />
           </Route>
         </Route>
 
@@ -112,4 +114,3 @@ function App() {
 }
 
 export default App;
-

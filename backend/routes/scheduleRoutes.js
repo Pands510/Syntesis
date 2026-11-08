@@ -1,10 +1,11 @@
-
 import { Router } from "express";
 
 import {
   registerScheduleEntry,
   getClassSchedule,
   getMySchedule,
+  getAllSchedules,
+  getProfessorMySchedule,
   removeScheduleEntry
 } from "../controllers/scheduleController.js";
 
@@ -15,31 +16,44 @@ import {
 
 const router = Router();
 
-//todas as rotas exigem autenticação
 router.use(authenticateToken);
 
-//agenda individual do aluno
+// Quadro geral do administrador
+router.get(
+  "/all",
+  authorizeRoles("ADMIN"),
+  getAllSchedules
+);
+
+// Agenda individual do aluno
 router.get(
   "/my",
   authorizeRoles("ALUNO"),
   getMySchedule
 );
 
-//consultar horários de uma turma
+// Agenda individual do professor
+router.get(
+  "/professor/my",
+  authorizeRoles("PROFESSOR"),
+  getProfessorMySchedule
+);
+
+// Consultar horários de uma turma
 router.get(
   "/class/:classId",
   authorizeRoles("ADMIN", "PROFESSOR"),
   getClassSchedule
 );
 
-//cadastrar horário
+// Cadastrar horário
 router.post(
   "/",
   authorizeRoles("ADMIN"),
   registerScheduleEntry
 );
 
-//excluir horário
+// Excluir horário
 router.delete(
   "/:id",
   authorizeRoles("ADMIN"),

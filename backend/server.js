@@ -17,6 +17,7 @@ import assessmentRoutes from "./routes/assessmentRoutes.js";
 import gradeRoutes from "./routes/gradeRoutes.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
 import academicTermRoutes from "./routes/academicTermRoutes.js";
+import enrollmentProofRoutes from "./routes/enrollmentProofRoutes.js";
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use("/api/assessments", assessmentRoutes);
 app.use("/api/grades", gradeRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/academic-terms", academicTermRoutes);
+app.use("/api/enrollment-proofs", enrollmentProofRoutes);
 
 app.get("/", (req, res) => {
   res.json({

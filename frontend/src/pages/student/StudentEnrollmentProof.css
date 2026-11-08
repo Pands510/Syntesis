@@ -1,0 +1,188 @@
+
+.student-proof {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  color: #1e293b;
+}
+
+.student-proof-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.student-proof-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.student-proof-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.student-proof-header p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.student-proof-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.student-proof-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 620px;
+  margin: 10px auto;
+  padding: 42px 35px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.student-proof-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 22px;
+  border-radius: 20px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.student-proof-card h3 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.student-proof-card > p {
+  max-width: 460px;
+  margin: 12px 0 24px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.student-proof-information {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  margin-bottom: 25px;
+  padding: 13px;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+}
+
+.student-proof-information svg {
+  flex-shrink: 0;
+  color: #16a34a;
+}
+
+.student-proof-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.student-proof-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.student-proof-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.student-proof-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  width: 100%;
+  margin-bottom: 18px;
+  padding: 13px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 13px;
+  text-align: left;
+}
+
+.student-proof-error svg {
+  flex-shrink: 0;
+}
+
+.student-proof-spin {
+  animation: proof-spin 1s linear infinite;
+}
+
+@keyframes proof-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .student-proof-header h2 {
+    font-size: 23px;
+  }
+
+  .student-proof-header-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .student-proof-card {
+    padding: 30px 20px;
+  }
+
+  .student-proof-information {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .student-proof-button {
+    width: 100%;
+  }
+}

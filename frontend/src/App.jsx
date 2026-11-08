@@ -20,6 +20,12 @@ import AdminStudents from "./pages/admin/AdminStudents";
 
 // Aluno
 import StudentDashboard from "./pages/student/StudentDashboard";
+import StudentLayout from "./components/student/StudentLayout";
+import StudentGrades from "./pages/student/StudentGrades";
+import StudentAttendance from "./pages/student/StudentAttendance";
+import StudentSchedule from "./pages/student/StudentSchedule";
+import StudentEnrollmentProof from "./pages/student/StudentEnrollmentProof";
+import StudentProfile from "./pages/student/StudentProfile";
 
 // Professor
 import ProfessorDashboard from "./pages/professor/ProfessorDashboard";
@@ -74,7 +80,19 @@ function App() {
 
         {/* Aluno */}
         <Route element={<ProtectedRoute allowedRoles={["ALUNO"]} />}>
-          <Route path="/aluno" element={<StudentDashboard />} />
+          <Route path="/aluno" element={<StudentLayout />}>
+            <Route index element={<StudentDashboard />} />
+          
+            <Route path="notas" element={<StudentGrades />} />
+          
+            <Route path="frequencia" element={<StudentAttendance />} />
+          
+            <Route path="horario" element={<StudentSchedule />} />
+          
+            <Route path="comprovante" element={<StudentEnrollmentProof />} />
+          
+            <Route path="perfil" element={<StudentProfile />} />
+          </Route>
         </Route>
 
         {/* Professor */}

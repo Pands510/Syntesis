@@ -3,16 +3,16 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   GraduationCap,
   LayoutDashboard,
-  UserRound,
-  BookOpen,
-  CalendarDays,
-  Library,
   FileText,
-  Settings,
+  ClipboardCheck,
+  CalendarDays,
+  FolderOpen,
+  UserRound,
   LogOut,
   Menu,
   X
 } from "lucide-react";
+
 import { useState } from "react";
 
 import { useAuth } from "../../contexts/AuthContext";
@@ -23,12 +23,8 @@ function StudentLayout() {
   const location = useLocation();
 
   const { usuario, encerrarSessao } = useAuth();
-  const [menuAberto, setMenuAberto] = useState(false);
 
-  function sair() {
-    encerrarSessao();
-    navigate("/login", { replace: true });
-  }
+  const [menuAberto, setMenuAberto] = useState(false);
 
   const itensMenu = [
     {
@@ -37,40 +33,58 @@ function StudentLayout() {
       caminho: "/aluno"
     },
     {
-      titulo: "Meu perfil",
-      icone: UserRound,
-      caminho: "/aluno/perfil"
+      titulo: "Boletim",
+      icone: FileText,
+      caminho: "/aluno/notas"
     },
     {
-      titulo: "Meu boletim",
-      icone: BookOpen,
-      caminho: "/aluno/boletim"
+      titulo: "Frequência",
+      icone: ClipboardCheck,
+      caminho: "/aluno/frequencia"
     },
     {
-      titulo: "Agenda",
+      titulo: "Meu horário",
       icone: CalendarDays,
-      caminho: "/aluno/agenda"
-    },
-    {
-      titulo: "Biblioteca",
-      icone: Library,
-      caminho: "/aluno/biblioteca"
+      caminho: "/aluno/horario"
     },
     {
       titulo: "Comprovante de matrícula",
-      icone: FileText,
+      icone: FolderOpen,
       caminho: "/aluno/comprovante"
     },
     {
-      titulo: "Configurações",
-      icone: Settings,
-      caminho: "/aluno/configuracoes"
+      titulo: "Meu perfil",
+      icone: UserRound,
+      caminho: "/aluno/perfil"
     }
   ];
 
+  const itemAtual = itensMenu.find((item) =>
+    item.caminho === "/aluno"
+      ? location.pathname === "/aluno"
+      : location.pathname.startsWith(item.caminho)
+  );
+
+  function navegar(caminho) {
+    navigate(caminho);
+    setMenuAberto(false);
+  }
+
+  function sair() {
+    encerrarSessao();
+    navigate("/login", { replace: true });
+  }
+
+  const primeiroNome = usuario?.name?.split(" ")[0] || "Aluno";
+  const inicial = usuario?.name?.charAt(0)?.toUpperCase() || "A";
+
   return (
     <div className="student-layout">
-      <aside className={`student-sidebar ${menuAberto ? "aberto" : ""}`}>
+
+      {/* Menu lateral */}
+      <aside
+        className={`student-sidebar ${menuAberto ? "aberto" : ""}`}
+      >
         <div className="student-brand">
           <div className="student-brand-icon">
             <GraduationCap size={28} />
@@ -82,6 +96,7 @@ function StudentLayout() {
           </div>
 
           <button
+            type="button"
             className="student-close-menu"
             onClick={() => setMenuAberto(false)}
             aria-label="Fechar menu"
@@ -105,12 +120,10 @@ function StudentLayout() {
 
             return (
               <button
+                type="button"
                 key={item.caminho}
                 className={`student-nav-item ${ativo ? "ativo" : ""}`}
-                onClick={() => {
-                  navigate(item.caminho);
-                  setMenuAberto(false);
-                }}
+                onClick={() => navegar(item.caminho)}
               >
                 <Icone size={20} />
                 <span>{item.titulo}</span>
@@ -119,9 +132,10 @@ function StudentLayout() {
           })}
         </nav>
 
+        {/* Identificação do aluno */}
         <div className="student-sidebar-footer">
           <div className="student-user-avatar">
-            {usuario?.name?.charAt(0)?.toUpperCase() || "A"}
+            {inicial}
           </div>
 
           <div className="student-user-info">
@@ -130,15 +144,18 @@ function StudentLayout() {
           </div>
 
           <button
+            type="button"
             className="student-logout"
             onClick={sair}
             title="Sair"
+            aria-label="Encerrar sessão"
           >
             <LogOut size={19} />
           </button>
         </div>
       </aside>
 
+      {/* Fundo do menu mobile */}
       {menuAberto && (
         <div
           className="student-overlay"
@@ -146,9 +163,12 @@ function StudentLayout() {
         />
       )}
 
+      {/* Conteúdo principal */}
       <main className="student-main">
+
         <header className="student-header">
           <button
+            type="button"
             className="student-menu-toggle"
             onClick={() => setMenuAberto(true)}
             aria-label="Abrir menu"
@@ -156,21 +176,30 @@ function StudentLayout() {
             <Menu size={23} />
           </button>
 
-          <div>
-            <span>Painel do aluno</span>
+          <div className="student-header-title">
+            <span>Portal do aluno</span>
+
             <h1>
-              Bem-vindo, {usuario?.name?.split(" ")[0] || "Aluno"}!
+              {itemAtual?.titulo || "Área do aluno"}
             </h1>
           </div>
 
-          <div className="student-header-avatar">
-            {usuario?.name?.charAt(0)?.toUpperCase() || "A"}
+          <div className="student-header-user">
+            <div className="student-header-user-info">
+              <strong>{primeiroNome}</strong>
+              <span>Aluno</span>
+            </div>
+
+            <div className="student-header-avatar">
+              {inicial}
+            </div>
           </div>
         </header>
 
         <section className="student-content">
           <Outlet />
         </section>
+
       </main>
     </div>
   );

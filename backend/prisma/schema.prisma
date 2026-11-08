@@ -222,13 +222,12 @@ model SchoolClass {
   term           Int
   semester       Int?
   isActive       Boolean @default(true)
-
   disciplineId   String
   professorId    String
   academicTermId String?
 
-  discipline Discipline @relation(fields: [disciplineId], references: [id], onDelete: Restrict)
-  professor  Professor  @relation(fields: [professorId], references: [id], onDelete: Restrict)
+  discipline   Discipline   @relation(fields: [disciplineId], references: [id], onDelete: Restrict)
+  professor    Professor    @relation(fields: [professorId], references: [id], onDelete: Restrict)
   academicTerm AcademicTerm? @relation(fields: [academicTermId], references: [id], onDelete: Restrict)
 
   enrollments     Enrollment[]
@@ -238,6 +237,7 @@ model SchoolClass {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([disciplineId, academicTermId])
   @@map("school_classes")
 }
 

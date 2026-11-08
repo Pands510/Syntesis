@@ -1,21 +1,24 @@
-//diante mão, já digo q não me responsabilizo por nenhuma desgraça q venha a cair por algo vindo dessa pasta
-//qnd fiz isso, só eu e Deus sabia o que eu tava fazendo, hoje só Deus sabe
 
 import prisma from "../database/prisma.js";
-import { garantirAvaliacoesDaTurma } from "./assessmentService.js";
 
+function criarErro(mensagem, statusCode) {
+  const error = new Error(mensagem);
+  error.statusCode = statusCode;
+  return error;
+}
+
+// Criar turma, matricular alunos e gerar avaliações iniciais.
 export async function createSchoolClass(data) {
   const {
     name,
     code,
     academicYear,
     term,
-    semester,
     disciplineId,
     professorId
   } = data;
 
-  // Verificar se a disciplina existe e está ativa
+  // Verificar se a disciplina existe e está ativa.
   const discipline = await prisma.discipline.findFirst({
     where: {
       id: disciplineId,
@@ -24,14 +27,13 @@ export async function createSchoolClass(data) {
   });
 
   if (!discipline) {
-    const error = new Error(
-      "Disciplina não encontrada ou inativa."
+    throw criarErro(
+      "Disciplina não encontrada ou inativa.",
+      404
     );
-    error.statusCode = 404;
-    throw error;
   }
 
-  // Verificar se o professor existe e está ativo
+  // Verificar se o professor existe e está ativo.
   const professor = await prisma.professor.findFirst({
     where: {
       id: professorId,
@@ -42,103 +44,177 @@ export async function createSchoolClass(data) {
   });
 
   if (!professor) {
-    const error = new Error(
-      "Professor não encontrado ou inativo."
+    throw criarErro(
+      "Professor não encontrado ou inativo.",
+      404
     );
-    error.statusCode = 404;
-    throw error;
   }
 
-  // Verificar vínculo entre professor e disciplina
+  // Verificar vínculo entre professor e disciplina.
   if (professor.disciplineId !== disciplineId) {
-    const error = new Error(
-      "O professor não está vinculado à disciplina selecionada."
+    throw criarErro(
+      "O professor não está vinculado à disciplina selecionada.",
+      400
     );
-    error.statusCode = 400;
-    throw error;
   }
 
-  // Verificar duplicidade do código
+  // Verificar duplicidade do código.
   const existingClass = await prisma.schoolClass.findUnique({
     where: { code }
   });
 
   if (existingClass) {
-    const error = new Error(
-      "Já existe uma turma com esse código."
+    throw criarErro(
+      "Já existe uma turma com esse código.",
+      409
     );
-    error.statusCode = 409;
-    throw error;
   }
 
-  // Localizar o período letivo e criar a turma
-  const turma = await prisma.$transaction(async (tx) => {
-    // Impede que o período seja encerrado durante a criação da turma.
-    await tx.$executeRaw`
-      LOCK TABLE academic_terms IN SHARE MODE
-    `;
+  try {
+    const resultado = await prisma.$transaction(async (tx) => {
 
-    const academicTerm = await tx.academicTerm.findFirst({
-      where: {
-        year: academicYear,
-        termNumber: term,
-        status: "EM_ANDAMENTO"
+      // Impede que o período seja encerrado durante a criação da turma.
+      await tx.$executeRaw`
+        LOCK TABLE academic_terms IN SHARE MODE
+      `;
+
+      // Localizar o período letivo em andamento.
+      const academicTerm = await tx.academicTerm.findFirst({
+        where: {
+          year: academicYear,
+          termNumber: term,
+          status: "EM_ANDAMENTO"
+        }
+      });
+
+      if (!academicTerm) {
+        throw criarErro(
+          "Não existe um período letivo em andamento para o ano e número informados.",
+          409
+        );
       }
-    });
 
-    if (!academicTerm) {
-      const error = new Error(
-        "Não existe um período letivo em andamento para o ano e número informados."
-      );
-      error.statusCode = 409;
-      throw error;
-    }
-
-    return tx.schoolClass.create({
-      data: {
-        name,
-        code,
-        academicYear,
-        term,
-        semester: semester ?? null,
-        disciplineId,
-        professorId,
-        academicTermId: academicTerm.id
-      },
-      include: {
-        discipline: {
-          select: {
-            id: true,
-            name: true,
-            code: true,
-            workloadHours: true
-          }
+      // Impedir mais de uma turma da mesma disciplina no período.
+      const turmaExistente = await tx.schoolClass.findFirst({
+        where: {
+          disciplineId,
+          academicTermId: academicTerm.id
         },
-        professor: {
-          select: {
-            id: true,
-            employeeNumber: true,
-            department: true,
-            user: {
-              select: {
-                name: true,
-                email: true
+        select: {
+          id: true,
+          name: true,
+          code: true
+        }
+      });
+
+      if (turmaExistente) {
+        throw criarErro(
+          "Já existe uma turma para esta disciplina neste período letivo.",
+          409
+        );
+      }
+
+      // Criar a turma.
+      // O semestre é sempre obtido da disciplina.
+      const turma = await tx.schoolClass.create({
+        data: {
+          name,
+          code,
+          academicYear,
+          term,
+          semester: discipline.semester,
+          disciplineId,
+          professorId,
+          academicTermId: academicTerm.id
+        },
+        include: {
+          discipline: {
+            select: {
+              id: true,
+              name: true,
+              code: true,
+              workloadHours: true
+            }
+          },
+          professor: {
+            select: {
+              id: true,
+              employeeNumber: true,
+              department: true,
+              user: {
+                select: {
+                  name: true,
+                  email: true
+                }
               }
             }
-          }
+          },
+          academicTerm: true
+        }
+      });
+
+      // Localizar alunos elegíveis para matrícula automática.
+      const alunosElegiveis = await tx.student.findMany({
+        where: {
+          status: "ATIVO",
+          courseId: discipline.courseId,
+          semester: discipline.semester
         },
-        academicTerm: true
+        select: {
+          id: true
+        }
+      });
+
+      // Matricular os alunos na turma.
+      let matriculasCriadas = 0;
+
+      if (alunosElegiveis.length > 0) {
+        const matriculas = await tx.enrollment.createMany({
+          data: alunosElegiveis.map((aluno) => ({
+            studentId: aluno.id,
+            classId: turma.id
+          })),
+          skipDuplicates: true
+        });
+
+        matriculasCriadas = matriculas.count;
       }
+
+      // Criar as três avaliações iniciais.
+      await tx.assessment.createMany({
+        data: ["U1", "U2", "U3"].map((unit) => ({
+          classId: turma.id,
+          unit,
+          number: "AVALIACAO1",
+          title: `Avaliação ${unit}`
+        }))
+      });
+
+      return {
+        turma,
+        matriculasCriadas
+      };
     });
-  });
 
-  // Criar avaliações iniciais da turma
-  await garantirAvaliacoesDaTurma(turma.id);
+    return {
+      ...resultado.turma,
+      matriculasCriadas: resultado.matriculasCriadas
+    };
 
-  return turma;
+  } catch (error) {
+    // Tratar conflitos de unicidade, inclusive requisições simultâneas.
+    if (error.code === "P2002") {
+      throw criarErro(
+        "Já existe uma turma com esse código ou para esta disciplina neste período letivo.",
+        409
+      );
+    }
+
+    throw error;
+  }
 }
 
-// Listar turmas conforme o perfil do usuário autenticado
+// Listar turmas conforme o perfil do usuário autenticado.
 export async function listSchoolClasses(user) {
   let where = {};
 
@@ -150,6 +226,7 @@ export async function listSchoolClasses(user) {
         }
       }
     };
+
   } else if (user.role === "ALUNO") {
     where = {
       enrollments: {
@@ -163,12 +240,12 @@ export async function listSchoolClasses(user) {
         }
       }
     };
+
   } else if (user.role !== "ADMIN") {
-    const error = new Error(
-      "Perfil sem permissão para consultar turmas."
+    throw criarErro(
+      "Perfil sem permissão para consultar turmas.",
+      403
     );
-    error.statusCode = 403;
-    throw error;
   }
 
   return prisma.schoolClass.findMany({

@@ -27,6 +27,12 @@ export async function registerDiscipline(req, res) {
       });
     }
 
+    if (!Number.isInteger(workloadHours) || workloadHours <= 0) {
+      return res.status(400).json({
+        mensagem: "A carga horária deve ser um número inteiro positivo."
+      });
+    }
+
     if (!Number.isInteger(semester) || semester <= 0) {
       return res.status(400).json({
         mensagem: "O semestre deve ser um número inteiro positivo."
@@ -38,7 +44,7 @@ export async function registerDiscipline(req, res) {
         mensagem: "O ID do curso é obrigatório."
       });
     }
-    //passando tudo certinho pro service(repare q o workloadHours entrou na base do seja o que Deus quiser)
+
     const discipline = await createDiscipline({
       name: name.trim(),
       code: code.trim(),

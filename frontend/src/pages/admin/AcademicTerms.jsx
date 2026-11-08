@@ -8,6 +8,7 @@ function AcademicTerms() {
   const [salvando, setSalvando] = useState(false);
   const [carregandoPrevia, setCarregandoPrevia] = useState(false);
   const [encerrando, setEncerrando] = useState(false);
+  const [iniciando, setIniciando] = useState(false);
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
@@ -176,6 +177,56 @@ function AcademicTerms() {
       );
     } finally {
       setEncerrando(false);
+    }
+  }
+
+  async function iniciarPeriodo(periodo) {
+    const existePeriodoEmAndamento = periodos.some(
+      (item) => item.status === "EM_ANDAMENTO"
+    );
+
+    if (existePeriodoEmAndamento) {
+      setErro("Já existe outro período letivo em andamento.");
+      return;
+    }
+
+    const confirmado = window.confirm(
+      `Deseja iniciar o período "${periodo.name}"?\n\n` +
+      "Após iniciar, ele ficará disponível para o cadastro de turmas."
+    );
+
+    if (!confirmado) {
+      return;
+    }
+
+    try {
+      setIniciando(true);
+      setErro("");
+      setMensagem("");
+
+      const resposta = await api.patch(
+        `/api/academic-terms/${periodo.id}/iniciar`
+      );
+
+      setMensagem(
+        resposta.data.mensagem ||
+        `O período "${periodo.name}" foi iniciado com sucesso.`
+      );
+
+      await carregarPeriodos();
+
+    } catch (error) {
+      console.error("Erro ao iniciar período letivo:", error);
+
+      setErro(
+        error.response?.data?.mensagem ||
+        "Não foi possível iniciar o período letivo."
+      );
+
+      await carregarPeriodos();
+
+    } finally {
+      setIniciando(false);
     }
   }
 
@@ -576,18 +627,48 @@ function AcademicTerms() {
                   </td>
 
                   <td>
-                    {periodo.status === "EM_ANDAMENTO" ? (
+                    {periodo.status === "PLANEJADO" ? (
+                      <button
+                        type="button"
+                        className="academic-terms-start-button"
+                        onClick={() => iniciarPeriodo(periodo)}
+                        disabled={
+                          iniciando ||
+                          encerrando ||
+                          periodos.some(
+                            (item) => item.status === "EM_ANDAMENTO"
+                          )
+                        }
+                        title={
+                          periodos.some(
+                            (item) => item.status === "EM_ANDAMENTO"
+                          )
+                            ? "Já existe outro período letivo em andamento."
+                            : "Iniciar este período letivo"
+                        }
+                      >
+                        {iniciando
+                          ? "Iniciando..."
+                          : periodos.some(
+                              (item) => item.status === "EM_ANDAMENTO"
+                            )
+                            ? "Aguardando"
+                            : "Iniciar período"}
+                      </button>
+                  
+                    ) : periodo.status === "EM_ANDAMENTO" ? (
                       <button
                         type="button"
                         className="academic-terms-preview-button"
                         onClick={() => visualizarProgressao(periodo)}
-                        disabled={carregandoPrevia || encerrando}
+                        disabled={carregandoPrevia || encerrando || iniciando}
                       >
                         {carregandoPrevia &&
                         periodoSelecionado?.id === periodo.id
                           ? "Gerando..."
                           : "Visualizar progressão"}
                       </button>
+                  
                     ) : (
                       <span className="academic-terms-no-action">
                         —

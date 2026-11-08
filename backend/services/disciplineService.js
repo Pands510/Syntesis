@@ -1,8 +1,26 @@
-//diante mão, já digo q não me responsabilizo por nenhuma desgraça q venha a cair por algo vindo dessa pasta
-//qnd fiz isso, só eu e Deus sabia o que eu tava fazendo, hoje só Deus sabe
 
 import prisma from "../database/prisma.js";
 
+function criarErro(mensagem, statusCode) {
+  const error = new Error(mensagem);
+  error.statusCode = statusCode;
+  return error;
+}
+
+function validarSemestre(semester, course) {
+  if (
+    !Number.isInteger(semester) ||
+    semester < 1 ||
+    semester > course.totalSemesters
+  ) {
+    throw criarErro(
+      `O semestre da disciplina deve estar entre 1 e ${course.totalSemesters}, conforme a duração do curso.`,
+      400
+    );
+  }
+}
+
+// Cadastrar disciplina
 export async function createDiscipline(data) {
   const {
     name,
@@ -12,37 +30,30 @@ export async function createDiscipline(data) {
     semester
   } = data;
 
-  // Verificar se o curso existe
   const course = await prisma.course.findUnique({
     where: { id: courseId }
   });
 
   if (!course) {
-    const error = new Error("Curso não encontrado.");
-    error.statusCode = 404;
-    throw error;
+    throw criarErro("Curso não encontrado.", 404);
   }
 
-  // Verificar se já existe uma disciplina com o mesmo código ou nome no curso
+  validarSemestre(semester, course);
+
   const existingDiscipline = await prisma.discipline.findFirst({
     where: {
       OR: [
         { code },
-        {
-          name,
-          courseId
-        }
+        { name, courseId }
       ]
     }
   });
 
   if (existingDiscipline) {
-    const error = new Error(
-      "Já existe uma disciplina com esse código ou nome neste curso."
+    throw criarErro(
+      "Já existe uma disciplina com esse código ou nome neste curso.",
+      409
     );
-
-    error.statusCode = 409;
-    throw error;
   }
 
   return prisma.discipline.create({
@@ -58,14 +69,14 @@ export async function createDiscipline(data) {
         select: {
           id: true,
           name: true,
-          code: true
+          code: true,
+          totalSemesters: true
         }
       }
     }
   });
 }
 
-// Listar todas as disciplinas
 // Listar disciplinas com filtros opcionais
 export async function listDisciplines(filters = {}) {
   const { courseId, semester } = filters;
@@ -73,14 +84,15 @@ export async function listDisciplines(filters = {}) {
   return prisma.discipline.findMany({
     where: {
       ...(courseId ? { courseId } : {}),
-      ...(semester ? { semester } : {})
+      ...(semester !== undefined ? { semester } : {})
     },
     include: {
       course: {
         select: {
           id: true,
           name: true,
-          code: true
+          code: true,
+          totalSemesters: true
         }
       }
     },
@@ -102,29 +114,24 @@ export async function updateDiscipline(id, data) {
     semester
   } = data;
 
-  // Verificar se a disciplina existe
   const discipline = await prisma.discipline.findUnique({
     where: { id }
   });
 
   if (!discipline) {
-    const error = new Error("Disciplina não encontrada.");
-    error.statusCode = 404;
-    throw error;
+    throw criarErro("Disciplina não encontrada.", 404);
   }
 
-  // Verificar se o curso existe
   const course = await prisma.course.findUnique({
     where: { id: courseId }
   });
 
   if (!course) {
-    const error = new Error("Curso não encontrado.");
-    error.statusCode = 404;
-    throw error;
+    throw criarErro("Curso não encontrado.", 404);
   }
 
-  // Verificar duplicidade de código ou nome no curso
+  validarSemestre(semester, course);
+
   const existingDiscipline = await prisma.discipline.findFirst({
     where: {
       id: { not: id },
@@ -136,11 +143,10 @@ export async function updateDiscipline(id, data) {
   });
 
   if (existingDiscipline) {
-    const error = new Error(
-      "Já existe uma disciplina com esse código ou nome neste curso."
+    throw criarErro(
+      "Já existe uma disciplina com esse código ou nome neste curso.",
+      409
     );
-    error.statusCode = 409;
-    throw error;
   }
 
   return prisma.discipline.update({
@@ -157,7 +163,9 @@ export async function updateDiscipline(id, data) {
         select: {
           id: true,
           name: true,
-          code: true
+          code: true,
+          totalSemesters: true,
+          totalSemesters: true
         }
       }
     }
@@ -171,22 +179,18 @@ export async function deleteDiscipline(id) {
   });
 
   if (!discipline) {
-    const error = new Error("Disciplina não encontrada.");
-    error.statusCode = 404;
-    throw error;
+    throw criarErro("Disciplina não encontrada.", 404);
   }
 
-  // Verificar se existem turmas vinculadas
   const totalTurmas = await prisma.schoolClass.count({
     where: { disciplineId: id }
   });
 
   if (totalTurmas > 0) {
-    const error = new Error(
-      "Não é possível excluir esta disciplina porque existem turmas vinculadas a ela."
+    throw criarErro(
+      "Não é possível excluir esta disciplina porque existem turmas vinculadas a ela.",
+      409
     );
-    error.statusCode = 409;
-    throw error;
   }
 
   await prisma.discipline.delete({

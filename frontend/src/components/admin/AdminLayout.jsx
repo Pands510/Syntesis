@@ -1,112 +1,137 @@
-﻿
+﻿import { Outlet, useNavigate } from "react-router-dom";
 import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate
-} from "react-router-dom";
+  GraduationCap,
+  LayoutDashboard,
+  Users,
+  UserPlus,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  CalendarDays,
+  School
+} from "lucide-react";
+import { useState } from "react";
 
-import Login from "./pages/Login";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
+import { useAuth } from "../../contexts/AuthContext";
+import "./AdminLayout.css";
 
-import ProtectedRoute from "./components/ProtectedRoute";
-import { useAuth } from "./contexts/AuthContext";
+function AdminLayout() {
+  const navigate = useNavigate();
+  const { usuario, encerrarSessao } = useAuth();
+  const [menuAberto, setMenuAberto] = useState(false);
 
-// Layouts
-import AdminLayout from "./components/admin/AdminLayout";
-import ProfessorLayout from "./components/professor/ProfessorLayout";
-import AdminStudents from "./pages/admin/AdminStudents";
-
-// Aluno
-import StudentDashboard from "./pages/student/StudentDashboard";
-
-// Professor
-import ProfessorDashboard from "./pages/professor/ProfessorDashboard";
-import ProfessorClasses from "./pages/professor/ProfessorClasses";
-import ProfessorAttendance from "./pages/professor/ProfessorAttendance";
-import ProfessorGrades from "./pages/professor/ProfessorGrades";
-
-// Administrador
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import Users from "./pages/admin/Users";
-import Professors from "./pages/admin/Professors";
-import Courses from "./pages/admin/Courses";
-import Disciplines from "./pages/admin/Disciplines";
-import Settings from "./pages/admin/Settings";
-import AcademicTerms from "./pages/admin/AcademicTerms";
-
-function HomeRedirect() {
-  const { usuario, autenticado, carregando } = useAuth();
-
-  if (carregando) {
-    return <p>Carregando...</p>;
+  function sair() {
+    encerrarSessao();
+    navigate("/login", { replace: true });
   }
 
-  if (!autenticado || !usuario) {
-    return <Navigate to="/login" replace />;
-  }
+  const itensMenu = [
+    { titulo: "Visão geral", icone: LayoutDashboard, caminho: "/admin" },
+    { titulo: "Usuários", icone: Users, caminho: "/admin/usuarios" },
+    { titulo: "Cursos", icone: GraduationCap, caminho: "/admin/cursos" },
+    { titulo: "Disciplinas", icone: GraduationCap, caminho: "/admin/disciplinas" },
+    { titulo: "Turmas", icone: School, caminho: "/admin/turmas" },
+    { titulo: "Cadastrar professor", icone: UserPlus, caminho: "/admin/professores" },
+    { titulo: "Períodos letivos", icone: CalendarDays, caminho: "/admin/periodos-letivos" },
+    { titulo: "Configurações", icone: Settings, caminho: "/admin/configuracoes" }
+  ];  
 
-  switch (usuario.role) {
-    case "ALUNO":
-      return <Navigate to="/aluno" replace />;
-    case "PROFESSOR":
-      return <Navigate to="/professor" replace />;
-    case "ADMIN":
-      return <Navigate to="/admin" replace />;
-    default:
-      return <Navigate to="/login" replace />;
-  }
-}
-
-function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomeRedirect />} />
+    <div className="admin-layout">
+      <aside className={`admin-sidebar ${menuAberto ? "aberto" : ""}`}>
+        <div className="admin-brand">
+          <div className="admin-brand-icon">
+            <GraduationCap size={28} />
+          </div>
 
-        {/* Autenticação */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/recuperar-senha" element={<ForgotPassword />} />
-        <Route path="/redefinir-senha" element={<ResetPassword />} />
+          <div>
+            <h2>Syntesis</h2>
+            <span>Sistema de Educação</span>
+          </div>
 
-        {/* Aluno */}
-        <Route element={<ProtectedRoute allowedRoles={["ALUNO"]} />}>
-          <Route path="/aluno" element={<StudentDashboard />} />
-        </Route>
+          <button
+            className="admin-close-menu"
+            onClick={() => setMenuAberto(false)}
+            aria-label="Fechar menu"
+          >
+            <X size={21} />
+          </button>
+        </div>
 
-        {/* Professor */}
-        <Route element={<ProtectedRoute allowedRoles={["PROFESSOR"]} />}>
-          <Route path="/professor" element={<ProfessorLayout />}>
-            <Route index element={<ProfessorDashboard />} />
-            <Route path="frequencia" element={<ProfessorAttendance />} />
-            <Route path="turmas" element={<ProfessorClasses />} />
-            <Route path="notas" element={<ProfessorGrades />} />
-            <Route path="agenda" element={<h2>Agenda</h2>} />
-          </Route>
-        </Route>
+        <div className="admin-menu-label">MENU PRINCIPAL</div>
 
-        {/* Administrador */}
-        <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="usuarios" element={<Users />} />
-            <Route path="professores" element={<Professors />} />
-            <Route path="cursos" element={<Courses />} />
-            <Route path="disciplinas" element={<Disciplines />} />
-            <Route path="periodos-letivos" element={<AcademicTerms />} />
-            <Route path="configuracoes" element={<Settings />} />
-            <Route path="alunos" element={<AdminStudents />} />
-          </Route>
-        </Route>
+        <nav className="admin-navigation">
+          {itensMenu.map((item) => {
+            const Icone = item.icone;
 
-        <Route
-          path="*"
-          element={<h1>Página não encontrada</h1>}
+            return (
+              <button
+                key={item.caminho}
+                className="admin-nav-item"
+                onClick={() => {
+                  navigate(item.caminho);
+                  setMenuAberto(false);
+                }}
+              >
+                <Icone size={20} />
+                <span>{item.titulo}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="admin-sidebar-footer">
+          <div className="admin-user-avatar">
+            {usuario?.name?.charAt(0)?.toUpperCase() || "A"}
+          </div>
+
+          <div className="admin-user-info">
+            <strong>{usuario?.name || "Administrador"}</strong>
+            <span>Administrador</span>
+          </div>
+
+          <button className="admin-logout" onClick={sair} title="Sair">
+            <LogOut size={19} />
+          </button>
+        </div>
+      </aside>
+
+      {menuAberto && (
+        <div
+          className="admin-overlay"
+          onClick={() => setMenuAberto(false)}
         />
-      </Routes>
-    </BrowserRouter>
+      )}
+
+      <main className="admin-main">
+        <header className="admin-header">
+          <button
+            className="admin-menu-toggle"
+            onClick={() => setMenuAberto(true)}
+            aria-label="Abrir menu"
+          >
+            <Menu size={23} />
+          </button>
+
+          <div>
+            <span>Painel administrativo</span>
+            <h1>
+              Bem-vindo, {usuario?.name?.split(" ")[0] || "Administrador"}!
+            </h1>
+          </div>
+
+          <div className="admin-header-avatar">
+            {usuario?.name?.charAt(0)?.toUpperCase() || "A"}
+          </div>
+        </header>
+
+        <section className="admin-content">
+          <Outlet />
+        </section>
+      </main>
+    </div>
   );
 }
 
-export default App;
+export default AdminLayout;

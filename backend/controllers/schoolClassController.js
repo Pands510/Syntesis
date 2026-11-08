@@ -4,7 +4,7 @@ import {
   listSchoolClasses
 } from "../services/schoolClassService.js";
 
-//cadastrar turma
+// Cadastrar turma.
 export async function registerSchoolClass(req, res) {
   try {
     const {
@@ -12,7 +12,6 @@ export async function registerSchoolClass(req, res) {
       code,
       academicYear,
       term,
-      semester,
       disciplineId,
       professorId
     } = req.body;
@@ -31,7 +30,7 @@ export async function registerSchoolClass(req, res) {
 
     if (
       !Number.isInteger(academicYear) ||
-      academicYear < 2000 //nem vem criticar isso
+      academicYear < 2000
     ) {
       return res.status(400).json({
         mensagem: "Informe um ano letivo válido."
@@ -44,16 +43,6 @@ export async function registerSchoolClass(req, res) {
     ) {
       return res.status(400).json({
         mensagem: "Informe um período letivo válido."
-      });
-    }
-
-    if (
-      semester !== undefined &&
-      semester !== null &&
-      (!Number.isInteger(semester) || semester < 1)
-    ) {
-      return res.status(400).json({
-        mensagem: "Informe um semestre válido."
       });
     }
 
@@ -74,15 +63,16 @@ export async function registerSchoolClass(req, res) {
       code: code.trim(),
       academicYear,
       term,
-      semester,
       disciplineId,
       professorId
     });
 
     return res.status(201).json({
       mensagem: "Turma cadastrada com sucesso.",
+      matriculasCriadas: schoolClass.matriculasCriadas,
       turma: schoolClass
     });
+
   } catch (error) {
     console.error("Erro ao cadastrar turma:", error);
 
@@ -94,16 +84,16 @@ export async function registerSchoolClass(req, res) {
   }
 }
 
-// listar turmas conforme o perfil do usuário autenticado
+// Listar turmas conforme o perfil do usuário autenticado.
 export async function getSchoolClasses(req, res) {
   try {
-    //novamente jogando a responsabilidade de filtrar o que o Admin/Professor/Aluno pode ver direto nas costas do service e seja o que Deus quiser
     const classes = await listSchoolClasses(req.user);
 
     return res.status(200).json({
       quantidade: classes.length,
       turmas: classes
     });
+
   } catch (error) {
     console.error("Erro ao listar turmas:", error);
 

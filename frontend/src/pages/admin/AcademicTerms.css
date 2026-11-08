@@ -429,3 +429,24 @@
     width: 100%;
   }
 }
+
+.academic-terms-start-button {
+  padding: 9px 13px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.academic-terms-start-button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.academic-terms-start-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

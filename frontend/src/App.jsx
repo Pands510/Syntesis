@@ -16,6 +16,7 @@ import { useAuth } from "./contexts/AuthContext";
 // Layouts
 import AdminLayout from "./components/admin/AdminLayout";
 import ProfessorLayout from "./components/professor/ProfessorLayout";
+import AdminStudents from "./pages/admin/AdminStudents";
 
 // Aluno
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -34,6 +35,7 @@ import Courses from "./pages/admin/Courses";
 import Disciplines from "./pages/admin/Disciplines";
 import Settings from "./pages/admin/Settings";
 import AcademicTerms from "./pages/admin/AcademicTerms";
+import Turmas from "./pages/admin/Turmas";
 
 function HomeRedirect() {
   const { usuario, autenticado, carregando } = useAuth();
@@ -95,6 +97,8 @@ function App() {
             <Route path="disciplinas" element={<Disciplines />} />
             <Route path="periodos-letivos" element={<AcademicTerms />} />
             <Route path="configuracoes" element={<Settings />} />
+            <Route path="alunos" element={<AdminStudents />} />
+            <Route path="turmas" element={<Turmas />} />
           </Route>
         </Route>
 
@@ -108,3 +112,4 @@ function App() {
 }
 
 export default App;
+

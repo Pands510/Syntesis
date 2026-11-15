@@ -1,5 +1,3 @@
-//diante mão, já digo q não me responsabilizo por nenhuma desgraça q venha a cair por algo vindo dessa pasta
-//qnd fiz isso, só eu e Deus sabia o que eu tava fazendo, hoje só Deus sabe
 
 import prisma from "../database/prisma.js";
 import bcrypt from "bcryptjs";
@@ -75,6 +73,59 @@ export async function changeUserPassword(userId, currentPassword, newPassword) {
   await prisma.user.update({
     where: { id: userId },
     data: { passwordHash }
+  });
+
+  return true;
+}
+
+export async function changeUserEmail(userId, currentPassword, newEmail) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      passwordHash: true
+    }
+  });
+
+  if (!user) {
+    const error = new Error("Usuário não encontrado.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const passwordIsValid = await bcrypt.compare(
+    currentPassword,
+    user.passwordHash
+  );
+
+  if (!passwordIsValid) {
+    const error = new Error("A senha atual está incorreta.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const normalizedEmail = newEmail.trim().toLowerCase();
+
+  if (normalizedEmail === user.email.toLowerCase()) {
+    const error = new Error("O novo e-mail deve ser diferente do atual.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const existingUser = await prisma.user.findUnique({
+    where: { email: normalizedEmail }
+  });
+
+  if (existingUser) {
+    const error = new Error("Este e-mail já está cadastrado.");
+    error.statusCode = 409;
+    throw error;
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { email: normalizedEmail }
   });
 
   return true;

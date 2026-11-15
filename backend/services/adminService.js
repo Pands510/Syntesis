@@ -1,5 +1,3 @@
-//diante mão, já digo q não me responsabilizo por nenhuma desgraça q venha a cair por algo vindo dessa pasta
-//qnd fiz isso, só eu e Deus sabia o que eu tava fazendo, hoje só Deus sabe
 
 import prisma from "../database/prisma.js";
 
@@ -130,7 +128,6 @@ export async function getDashboardStats() {
     usuariosAtivos
   };
 }
-
 
 export async function listStudents() {
   return prisma.student.findMany({

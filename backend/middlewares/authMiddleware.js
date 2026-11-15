@@ -14,7 +14,6 @@ export async function authenticateToken(req, res, next) {
   const token = authorization.split(" ")[1];
 
   try {
-    //decodificando o token com o algoritmo travado em HS256 pra evitar ataques de token "None".
     const decoded = jwt.verify(token, process.env.JWT_SECRET, {
       algorithms: ["HS256"]
     });
@@ -44,7 +43,7 @@ export async function authenticateToken(req, res, next) {
       role: user.role
     };
 
-    next();//vai com Deus para o controller
+    next();
 
   } catch (error) {
     if (error.name === "JsonWebTokenError" ||

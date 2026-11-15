@@ -15,7 +15,6 @@ export function errorMiddleware(err, req, res, next) {
   return res.status(statusCode).json({
     mensagem:
       statusCode === 500
-      //acredite, eu vi isso mais doq gostaria por coisa besta
         ? "Erro interno do servidor."
         : err.message || "Ocorreu um erro na solicitação."
   });

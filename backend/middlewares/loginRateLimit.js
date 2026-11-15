@@ -1,8 +1,8 @@
 import { rateLimit } from "express-rate-limit";
 
 const loginRateLimit = rateLimit({
-  windowMs: 15 * 60 * 1000, //depois de eu ter ficado engastaiado nisso, pensando seriamente em tirar
-  limit: 5,
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
   skipSuccessfulRequests: true,
   standardHeaders: true,
   legacyHeaders: false,

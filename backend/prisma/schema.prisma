@@ -70,6 +70,15 @@ enum AcademicTermStatus {
   ENCERRADO
 }
 
+enum AnnouncementTargetType {
+  TODOS
+  ALUNOS
+  CURSO
+  TODAS_TURMAS
+  TURMA
+  ALUNO
+}
+
 model User {
   id           String   @id @default(uuid())
   name         String
@@ -81,10 +90,30 @@ model User {
   student   Student?
   professor Professor?
 
+  announcementsAuthored  Announcement[]          @relation("AnnouncementAuthor")
+  announcementRecipients AnnouncementRecipient[]
+  passwordResetTokens PasswordResetToken[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, expiresAt])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
 }
 
 model Student {
@@ -92,7 +121,7 @@ model Student {
   userId             String  @unique
   registrationNumber String? @unique
 
-  // Campo antigo mantido durante a transição
+  // Campo antigo mantido durante a transiÃ§Ã£o
   course   String?
   semester Int?
   status   StudentStatus @default(ATIVO)
@@ -103,36 +132,38 @@ model Student {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   academicCourse Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
-  
+
   enrollments     Enrollment[]
   academicHistory AcademicHistory[]
+
+  targetAnnouncements Announcement[] @relation("AnnouncementStudent")
 
   @@map("students")
 }
 
 model AcademicHistory {
-  id              String             @id @default(uuid())
-  studentId       String
-  type            AcademicHistoryType
+  id               String              @id @default(uuid())
+  studentId        String
+  type             AcademicHistoryType
   previousCourseId String?
   newCourseId      String?
   academicTermId   String?
   semester         Int?
   description      String?
-  occurredAt       DateTime           @default(now())
+  occurredAt       DateTime            @default(now())
 
   student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
 
-  previousCourse Course? @relation("PreviousCourse", fields: [previousCourseId], references: [id], onDelete: Restrict)
-  newCourse      Course? @relation("NewCourse", fields: [newCourseId], references: [id], onDelete: Restrict)
+  previousCourse Course?       @relation("PreviousCourse", fields: [previousCourseId], references: [id], onDelete: Restrict)
+  newCourse      Course?       @relation("NewCourse", fields: [newCourseId], references: [id], onDelete: Restrict)
   academicTerm   AcademicTerm? @relation(fields: [academicTermId], references: [id], onDelete: Restrict)
 
   createdAt DateTime @default(now())
 
+  @@unique([studentId, academicTermId, type])
   @@index([studentId, occurredAt])
   @@index([academicTermId])
   @@map("academic_history")
-  @@unique([studentId, academicTermId, type])
 }
 
 model Professor {
@@ -164,6 +195,7 @@ model Course {
   students    Student[]
   disciplines Discipline[]
 
+  targetAnnouncements Announcement[] @relation("AnnouncementCourse")
 
   previousAcademicHistories AcademicHistory[] @relation("PreviousCourse")
   newAcademicHistories      AcademicHistory[] @relation("NewCourse")
@@ -179,13 +211,13 @@ model Discipline {
   name          String
   code          String  @unique
   workloadHours Int
-  semester      Int @default(1)
+  semester      Int     @default(1)
   isActive      Boolean @default(true)
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
 
-  classes SchoolClass[]
+  classes    SchoolClass[]
   professors Professor[]
 
   createdAt DateTime @default(now())
@@ -196,7 +228,7 @@ model Discipline {
 }
 
 model AcademicTerm {
-  id         String            @id @default(uuid())
+  id         String             @id @default(uuid())
   name       String
   year       Int
   termNumber Int
@@ -204,7 +236,7 @@ model AcademicTerm {
   endDate    DateTime
   status     AcademicTermStatus @default(PLANEJADO)
 
-  schoolClasses SchoolClass[]
+  schoolClasses   SchoolClass[]
   academicHistory AcademicHistory[]
 
   createdAt DateTime @default(now())
@@ -226,13 +258,15 @@ model SchoolClass {
   professorId    String
   academicTermId String?
 
-  discipline   Discipline   @relation(fields: [disciplineId], references: [id], onDelete: Restrict)
-  professor    Professor    @relation(fields: [professorId], references: [id], onDelete: Restrict)
+  discipline   Discipline    @relation(fields: [disciplineId], references: [id], onDelete: Restrict)
+  professor    Professor     @relation(fields: [professorId], references: [id], onDelete: Restrict)
   academicTerm AcademicTerm? @relation(fields: [academicTermId], references: [id], onDelete: Restrict)
 
   enrollments     Enrollment[]
   scheduleEntries ScheduleEntry[]
   assessments     Assessment[]
+
+  targetAnnouncements Announcement[] @relation("AnnouncementClass")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -289,7 +323,7 @@ model Assessment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Impede mais de três avaliações por unidade na mesma turma.
+  // Impede mais de trÃªs avaliaÃ§Ãµes por unidade na mesma turma.
   @@unique([classId, unit, number])
   @@map("assessments")
 }
@@ -306,7 +340,7 @@ model Grade {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Uma nota por aluno em cada avaliação.
+  // Uma nota por aluno em cada avaliaÃ§Ã£o.
   @@unique([assessmentId, enrollmentId])
   @@map("grades")
 }
@@ -339,4 +373,47 @@ model Attendance {
 
   @@unique([enrollmentId, date, shift, lessonNumber])
   @@map("attendances")
+}
+
+model Announcement {
+  id          String                 @id @default(uuid())
+  authorId    String
+  title       String
+  content     String                 @db.Text
+  targetType  AnnouncementTargetType
+  courseId    String?
+  classId     String?
+  studentId   String?
+  isActive    Boolean                @default(true)
+  publishedAt DateTime               @default(now())
+
+  author        User         @relation("AnnouncementAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  targetCourse  Course?      @relation("AnnouncementCourse", fields: [courseId], references: [id], onDelete: SetNull)
+  targetClass   SchoolClass? @relation("AnnouncementClass", fields: [classId], references: [id], onDelete: SetNull)
+  targetStudent Student?     @relation("AnnouncementStudent", fields: [studentId], references: [id], onDelete: SetNull)
+
+  recipients AnnouncementRecipient[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId, publishedAt])
+  @@index([targetType, publishedAt])
+  @@map("announcements")
+}
+
+model AnnouncementRecipient {
+  id             String    @id @default(uuid())
+  announcementId String
+  userId         String
+  readAt         DateTime?
+
+  announcement Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([announcementId, userId])
+  @@index([userId, readAt])
+  @@map("announcement_recipients")
 }

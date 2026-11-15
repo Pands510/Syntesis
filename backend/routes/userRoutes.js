@@ -3,7 +3,8 @@ import { Router } from "express";
 import {
   registerStudent,
   getMyStudentProfile,
-  getMyStudentEnrollments
+  getMyStudentEnrollments,
+  getMyProfessorProfile
 } from "../controllers/userController.js";
 
 import {
@@ -13,10 +14,10 @@ import {
 
 const router = Router();
 
-//cadastro público de alunos
+// Cadastro público de alunos
 router.post("/register", registerStudent);
 
-//consulta do perfil do próprio aluno
+// Consulta do perfil do próprio aluno
 router.get(
   "/me",
   authenticateToken,
@@ -24,12 +25,20 @@ router.get(
   getMyStudentProfile
 );
 
-//consulta das matrículas do próprio aluno
+// Consulta das matrículas do próprio aluno
 router.get(
   "/me/enrollments",
   authenticateToken,
   authorizeRoles("ALUNO"),
   getMyStudentEnrollments
+);
+
+// Consulta do perfil do próprio professor
+router.get(
+  "/professor/me",
+  authenticateToken,
+  authorizeRoles("PROFESSOR"),
+  getMyProfessorProfile
 );
 
 export default router;

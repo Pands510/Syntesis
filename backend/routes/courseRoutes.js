@@ -16,22 +16,22 @@ import {
 
 const router = Router();
 
-//todas as rotas exigem autenticação e perfil admin
+// Todas as rotas exigem autenticação e perfil ADMIN
 router.use(authenticateToken, authorizeRoles("ADMIN"));
 
-//listar cursos
+// Listar cursos
 router.get("/", getCourses);
 
-//cadastrar curso
+// Cadastrar curso
 router.post("/", registerCourse);
 
-//editar curso
+// Editar curso
 router.put("/:id", updateCourse);
 
-//excluir curso
+// Excluir curso
 router.delete("/:id", deleteCourse);
 
-//vincular aluno a um curso
+// Vincular aluno a um curso
 router.post("/enroll-student", enrollStudentInCourse);
 
 export default router;

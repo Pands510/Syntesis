@@ -16,7 +16,7 @@ import {
 
 const router = Router();
 
-//todas as rotas exigem autenticação
+// Todas as rotas exigem autenticação
 router.use(authenticateToken);
 
 router.get(
@@ -25,35 +25,35 @@ router.get(
   getStudentReport
 );
 
-//consultar notas: ADMIN, PROFESSOR e ALUNO
+// Consultar notas: ADMIN, PROFESSOR e ALUNO
 router.get(
   "/:classId",
   authorizeRoles("ADMIN", "PROFESSOR", "ALUNO"),
   listGrades
 );
 
-//lançar nota individual: somente PROFESSOR
+// Lançar nota individual: somente PROFESSOR
 router.post(
   "/",
   authorizeRoles("PROFESSOR"),
   createGrade
 );
 
-//lançar várias notas de uma vez: somente PROFESSOR
+// Lançar várias notas de uma vez: somente PROFESSOR
 router.post(
   "/batch",
   authorizeRoles("PROFESSOR"),
   createGradesBatch
 );
 
-//lançar ou atualizar notas da prova final em lote: somente PROFESSOR
+// Lançar ou atualizar notas da prova final em lote: somente PROFESSOR
 router.post(
   "/final",
   authorizeRoles("PROFESSOR"),
   createFinalExamGradesBatch
 );
 
-//atualizar nota individual: somente PROFESSOR
+// Atualizar nota individual: somente PROFESSOR
 router.put(
   "/:id",
   authorizeRoles("PROFESSOR"),

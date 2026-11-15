@@ -13,24 +13,24 @@ import {
 
 const router = Router();
 
-//todas as rotas exigem autenticação
+// Todas as rotas exigem autenticação
 router.use(authenticateToken);
 
-//matricular aluno: somente ADMIN
+// Matricular aluno: somente ADMIN
 router.post(
   "/",
   authorizeRoles("ADMIN"),
   registerEnrollment
 );
 
-//consultar matrículas: ADMIN, PROFESSOR e ALUNO
+// Consultar matrículas: ADMIN, PROFESSOR e ALUNO
 router.get(
   "/",
   authorizeRoles("ADMIN", "PROFESSOR", "ALUNO"),
   getEnrollments
 );
 
-//alterar status: somente ADMIN
+// Alterar status: somente ADMIN
 router.patch(
   "/:id/status",
   authorizeRoles("ADMIN"),

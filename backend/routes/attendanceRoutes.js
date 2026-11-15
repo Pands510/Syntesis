@@ -17,35 +17,35 @@ const router = Router();
 
 router.use(authenticateToken);
 
-//consultar próprias frequências: somente aluno
+// Consultar próprias frequências: somente ALUNO
 router.get(
   "/my",
   authorizeRoles("ALUNO"),
   listMyAttendance
 );
 
-//consultar calendário: admin e professpr
+// Consultar calendário: ADMIN e PROFESSOR
 router.get(
   "/:classId/dates",
   authorizeRoles("ADMIN", "PROFESSOR"),
   listAttendanceDates
 );
 
-//consultar alunos e frequências de uma data
+// Consultar alunos e frequências de uma data
 router.get(
   "/:classId/date",
   authorizeRoles("ADMIN", "PROFESSOR"),
   listAttendanceByDate
 );
 
-//registrar frequência individual: somente professor
+// Registrar frequência individual: somente PROFESSOR
 router.post(
   "/",
   authorizeRoles("PROFESSOR"),
   registerAttendance
 );
 
-//registrar frequências em lote: somente professor
+// Registrar frequências em lote: somente PROFESSOR
 router.post(
   "/batch",
   authorizeRoles("PROFESSOR"),

@@ -15,31 +15,31 @@ import {
 
 const router = Router();
 
-//todas as rotas exigem autenticação
+// Todas as rotas exigem autenticação
 router.use(authenticateToken);
 
-//cadastrar avaliação: somente professsor
+// Cadastrar avaliação: somente PROFESSOR
 router.post(
   "/",
   authorizeRoles("PROFESSOR"),
   createAssessment
 );
 
-//consultar avaliações: adm, professor e aluno
+// Consultar avaliações: ADMIN, PROFESSOR e ALUNO
 router.get(
   "/:classId",
   authorizeRoles("ADMIN", "PROFESSOR", "ALUNO"),
   listAssessments
 );
 
-//editar avaliação: somente professro
+// Editar avaliação: somente PROFESSOR
 router.put(
   "/:id",
   authorizeRoles("PROFESSOR"),
   updateAssessment
 );
 
-//excluir avaliação: somente professor
+// Excluir avaliação: somente PROFESSOR
 router.delete(
   "/:id",
   authorizeRoles("PROFESSOR"),

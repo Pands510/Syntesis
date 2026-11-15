@@ -3,17 +3,25 @@ import loginRateLimit from "../middlewares/loginRateLimit.js";
 
 import {
   login,
-  changePassword
+  changePassword,
+  changeEmail,
+  requestPasswordReset,
+  resetPassword
 } from "../controllers/authController.js";
 
 import { authenticateToken } from "../middlewares/authMiddleware.js";
+import passwordResetRateLimit from "../middlewares/passwordResetRateLimit.js";
 
 const router = Router();
 
-//autenticação
+router.post("/forgot-password", passwordResetRateLimit, requestPasswordReset);
+
+router.post("/reset-password", passwordResetRateLimit, resetPassword);
+
+// Autenticação
 router.post("/login", loginRateLimit, login);
 
-//consulta do usuário autenticado
+// Consulta do usuário autenticado
 router.get("/me", authenticateToken, (req, res) => {
   return res.status(200).json({
     mensagem: "Você está autenticado!",
@@ -21,7 +29,10 @@ router.get("/me", authenticateToken, (req, res) => {
   });
 });
 
-//alteração da senha do próprio usuário
+// Alteração da senha do próprio usuário
 router.patch("/change-password", authenticateToken, changePassword);
+
+// Alteração do e-mail do próprio usuário
+router.patch("/change-email", authenticateToken, changeEmail);
 
 export default router;

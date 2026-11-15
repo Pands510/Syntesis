@@ -18,7 +18,7 @@ async function checkAdminLogin() {
       email: true,
       role: true,
       isActive: true,
-      passwordHash: true//trazendo o hash para a conferência matemática do Bcrypt
+      passwordHash: true
     }
   });
 

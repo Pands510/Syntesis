@@ -8,7 +8,7 @@ async function createAdmin() {
   const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
 
-  //confere se as variáveis foram configuradas
+  // Confere se as variáveis foram configuradas
   if (!name || !email || !password) {
     throw new Error(
       "Configure ADMIN_NAME, ADMIN_EMAIL e ADMIN_PASSWORD no arquivo .env."
@@ -21,7 +21,7 @@ async function createAdmin() {
     );
   }
 
-  //verifica se o e-mail já está cadastrado
+  // Verifica se o e-mail já está cadastrado
   const existingUser = await prisma.user.findUnique({
     where: { email }
   });
@@ -37,10 +37,10 @@ async function createAdmin() {
     );
   }
 
-  //criptografa a senha
+  // Criptografa a senha
   const passwordHash = await bcrypt.hash(password, 12);
 
-  //cria a conta de administrador
+  // Cria a conta de administrador
   const admin = await prisma.user.create({
     data: {
       name,

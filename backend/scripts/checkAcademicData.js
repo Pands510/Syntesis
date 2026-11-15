@@ -1,7 +1,6 @@
 import prisma from "../database/prisma.js";
 
 async function main() {
-  //quando testei na minha máquina com 10 alunos de teste, funcionou
   const alunos = await prisma.student.findMany({
     select: {
       id: true,
@@ -19,7 +18,6 @@ async function main() {
     }
   });
 
-  //divisor bonitin pro terminal(tomei trauma de powershell, acredite)
   console.log("\n=== ALUNOS E SEUS CURSOS ===");
   console.log(JSON.stringify(alunos, null, 2));
 

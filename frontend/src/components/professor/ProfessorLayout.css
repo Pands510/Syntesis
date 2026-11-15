@@ -1,3 +1,4 @@
+
 .professor-layout {
   display: flex;
   min-height: 100vh;
@@ -5,6 +6,7 @@
 }
 
 /* Menu lateral */
+
 .professor-sidebar {
   width: 260px;
   height: 100vh;
@@ -34,9 +36,13 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #ffffff;
-  background: #2563eb;
-  border-radius: 13px;
+  background: transparent;
+}
+
+.professor-brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .professor-brand h2 {
@@ -61,6 +67,7 @@
 }
 
 /* Navegação */
+
 .professor-menu-label {
   margin: 0 0 13px 10px;
   color: #94a3b8;
@@ -73,6 +80,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
+  overflow-y: auto;
 }
 
 .professor-nav-item {
@@ -92,18 +100,18 @@
   transition: 0.2s;
 }
 
-.professor-nav-item:hover {
+.professor-nav-item:hover,
+.professor-nav-item.ativo {
   background: #eff6ff;
   color: #2563eb;
 }
 
 .professor-nav-item.ativo {
-  background: #eff6ff;
-  color: #2563eb;
   font-weight: 700;
 }
 
-/* Rodapé do menu */
+/* Rodapé */
+
 .professor-sidebar-footer {
   display: flex;
   align-items: center;
@@ -170,6 +178,7 @@
 }
 
 /* Conteúdo principal */
+
 .professor-main {
   width: calc(100% - 260px);
   min-height: 100vh;
@@ -224,6 +233,7 @@
 }
 
 /* Responsividade */
+
 @media (max-width: 900px) {
   .professor-sidebar {
     transform: translateX(-100%);

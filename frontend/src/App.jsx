@@ -26,12 +26,16 @@ import StudentAttendance from "./pages/student/StudentAttendance";
 import StudentSchedule from "./pages/student/StudentSchedule";
 import StudentEnrollmentProof from "./pages/student/StudentEnrollmentProof";
 import StudentProfile from "./pages/student/StudentProfile";
+import StudentAnnouncements from "./pages/student/StudentAnnouncements";
 
 // Professor
 import ProfessorDashboard from "./pages/professor/ProfessorDashboard";
 import ProfessorClasses from "./pages/professor/ProfessorClasses";
 import ProfessorAttendance from "./pages/professor/ProfessorAttendance";
 import ProfessorGrades from "./pages/professor/ProfessorGrades";
+import ProfessorProfile from "./pages/professor/ProfessorProfile";
+import ProfessorAgenda from "./pages/professor/ProfessorAgenda";
+import ProfessorAnnouncements from "./pages/professor/ProfessorAnnouncements";
 
 // Administrador
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -43,6 +47,7 @@ import Settings from "./pages/admin/Settings";
 import AcademicTerms from "./pages/admin/AcademicTerms";
 import Turmas from "./pages/admin/Turmas";
 import GradeHorarios from "./pages/admin/GradeHorarios";
+import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 
 function HomeRedirect() {
   const { usuario, autenticado, carregando } = useAuth();
@@ -88,6 +93,8 @@ function App() {
             <Route path="frequencia" element={<StudentAttendance />} />
           
             <Route path="horario" element={<StudentSchedule />} />
+
+            <Route path="comunicados" element={<StudentAnnouncements />} />
           
             <Route path="comprovante" element={<StudentEnrollmentProof />} />
           
@@ -102,7 +109,9 @@ function App() {
             <Route path="frequencia" element={<ProfessorAttendance />} />
             <Route path="turmas" element={<ProfessorClasses />} />
             <Route path="notas" element={<ProfessorGrades />} />
-            <Route path="agenda" element={<h2>Agenda</h2>} />
+            <Route path="agenda" element={<ProfessorAgenda />} />
+            <Route path="comunicados" element={<ProfessorAnnouncements />} />
+            <Route path="perfil" element={<ProfessorProfile />} />
           </Route>
         </Route>
 
@@ -119,6 +128,7 @@ function App() {
             <Route path="alunos" element={<AdminStudents />} />
             <Route path="turmas" element={<Turmas />} />
             <Route path="grade-horarios" element={<GradeHorarios />} />
+            <Route path="comunicados" element={<AdminAnnouncements />} />
           </Route>
         </Route>
 

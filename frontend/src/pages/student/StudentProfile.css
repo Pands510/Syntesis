@@ -168,3 +168,143 @@
     font-size: 18px;
   }
 }
+
+
+/* Configurações da conta */
+
+.student-settings-description {
+  margin: -10px 0 24px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.student-settings-form {
+  padding: 22px;
+  margin-top: 20px;
+  background: #f8fafc;
+  border: 1px solid #e5eaf1;
+  border-radius: 12px;
+}
+
+.student-settings-form h4 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 20px;
+  color: #263449;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.student-settings-form h4 svg {
+  color: #2563eb;
+}
+
+.student-settings-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  max-width: 620px;
+}
+
+.student-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.student-settings-field label {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.student-settings-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 13px;
+  color: #263449;
+  background: #ffffff;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.student-settings-field input::placeholder {
+  color: #a0aaba;
+}
+
+.student-settings-field input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.student-settings-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: fit-content;
+  min-height: 42px;
+  padding: 0 18px;
+  color: #ffffff;
+  background: #2563eb;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.student-settings-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.student-settings-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.student-settings-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.student-settings-message svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.student-settings-message.error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.student-settings-message.success {
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+@media (max-width: 700px) {
+  .student-settings-form {
+    padding: 17px;
+  }
+
+  .student-settings-button {
+    width: 100%;
+  }
+}

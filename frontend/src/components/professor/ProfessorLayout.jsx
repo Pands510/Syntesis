@@ -1,3 +1,4 @@
+
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   GraduationCap,
@@ -6,9 +7,11 @@ import {
   BookOpen,
   CalendarDays,
   FileText,
+  UserRound,
   LogOut,
   Menu,
-  X
+  X,
+  Megaphone
 } from "lucide-react";
 import { useState } from "react";
 
@@ -49,10 +52,20 @@ function ProfessorLayout() {
       caminho: "/professor/agenda"
     },
     {
-        titulo: "Notas",
-        icone: FileText,
-        caminho: "/professor/notas"
+      titulo: "Notas",
+      icone: FileText,
+      caminho: "/professor/notas"
     },
+    {
+      titulo: "Comunicados",
+      icone: Megaphone,
+      caminho: "/professor/comunicados"
+    },
+    {
+      titulo: "Meu Perfil",
+      icone: UserRound,
+      caminho: "/professor/perfil"
+    }
   ];
 
   return (
@@ -60,7 +73,11 @@ function ProfessorLayout() {
       <aside className={`professor-sidebar ${menuAberto ? "aberto" : ""}`}>
         <div className="professor-brand">
           <div className="professor-brand-icon">
-            <GraduationCap size={28} />
+            <img
+              src="/brand/syntesis-logo.png"
+              alt="Syntesis"
+              className="professor-brand-logo"
+            />
           </div>
 
           <div>

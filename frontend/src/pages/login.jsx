@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  GraduationCap,
   Lock,
   Mail,
   Eye,
@@ -75,7 +74,11 @@ function Login() {
     <main className="login-page">
       <section className="login-card">
         <div className="login-logo">
-          <GraduationCap size={42} />
+          <img
+            src="/brand/syntesis-logo.png"
+            alt="Syntesis"
+            className="login-logo-image"
+          />
         </div>
 
         <h1>Syntesis</h1>

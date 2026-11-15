@@ -1,4 +1,6 @@
-﻿import { Outlet, useNavigate } from "react-router-dom";
+﻿import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+
 import {
   GraduationCap,
   LayoutDashboard,
@@ -10,15 +12,17 @@ import {
   X,
   CalendarDays,
   School,
-  CalendarClock
+  CalendarClock,
+  Megaphone
 } from "lucide-react";
-import { useState } from "react";
 
 import { useAuth } from "../../contexts/AuthContext";
 import "./AdminLayout.css";
 
 function AdminLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const { usuario, encerrarSessao } = useAuth();
   const [menuAberto, setMenuAberto] = useState(false);
 
@@ -36,17 +40,31 @@ function AdminLayout() {
     { titulo: "Quadro de horários", icone: CalendarClock, caminho: "/admin/grade-horarios" },
     { titulo: "Cadastrar professor", icone: UserPlus, caminho: "/admin/professores" },
     { titulo: "Períodos letivos", icone: CalendarDays, caminho: "/admin/periodos-letivos" },
+    { titulo: "Comunicados", icone: Megaphone, caminho: "/admin/comunicados" },
     { titulo: "Configurações", icone: Settings, caminho: "/admin/configuracoes" }
-  ];  
+  ];
+
+  function paginaAtiva(caminho) {
+    if (caminho === "/admin") {
+      return location.pathname === "/admin";
+    }
+
+    return location.pathname === caminho ||
+      location.pathname.startsWith(`${caminho}/`);
+  }
 
   return (
     <div className="admin-layout">
       <aside className={`admin-sidebar ${menuAberto ? "aberto" : ""}`}>
         <div className="admin-brand">
           <div className="admin-brand-icon">
-            <GraduationCap size={28} />
+            <img
+              src="/brand/syntesis-logo.png"
+              alt="Syntesis"
+              className="admin-brand-logo"
+            />
           </div>
-
+            
           <div>
             <h2>Syntesis</h2>
             <span>Sistema de Educação</span>
@@ -66,11 +84,12 @@ function AdminLayout() {
         <nav className="admin-navigation">
           {itensMenu.map((item) => {
             const Icone = item.icone;
+            const ativo = paginaAtiva(item.caminho);
 
             return (
               <button
                 key={item.caminho}
-                className="admin-nav-item"
+                className={`admin-nav-item ${ativo ? "ativo" : ""}`}
                 onClick={() => {
                   navigate(item.caminho);
                   setMenuAberto(false);
@@ -93,7 +112,12 @@ function AdminLayout() {
             <span>Administrador</span>
           </div>
 
-          <button className="admin-logout" onClick={sair} title="Sair">
+          <button
+            className="admin-logout"
+            onClick={sair}
+            title="Sair"
+            aria-label="Sair"
+          >
             <LogOut size={19} />
           </button>
         </div>

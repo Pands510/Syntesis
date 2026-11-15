@@ -10,7 +10,8 @@ import {
   UserRound,
   LogOut,
   Menu,
-  X
+  X,
+  Megaphone
 } from "lucide-react";
 
 import { useState } from "react";
@@ -46,6 +47,11 @@ function StudentLayout() {
       titulo: "Meu horário",
       icone: CalendarDays,
       caminho: "/aluno/horario"
+    },
+    {
+      titulo: "Comunicados",
+      icone: Megaphone,
+      caminho: "/aluno/comunicados"
     },
     {
       titulo: "Comprovante de matrícula",
@@ -87,7 +93,11 @@ function StudentLayout() {
       >
         <div className="student-brand">
           <div className="student-brand-icon">
-            <GraduationCap size={28} />
+            <img
+              src="/brand/syntesis-logo.png"
+              alt="Syntesis"
+              className="student-brand-logo"
+            />
           </div>
 
           <div>

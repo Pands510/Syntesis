@@ -34,9 +34,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #ffffff;
-  background: #2457c5;
-  border-radius: 18px;
+  background: transparent;
 }
 
 .login-card h1 {
@@ -170,4 +168,128 @@ body {
   .login-card {
     padding: 28px 22px;
   }
+}
+
+
+/* ========================================
+   PÁGINAS DE AUTENTICAÇÃO
+======================================== */
+
+.auth-card {
+  animation: authFadeIn 0.35s ease;
+}
+
+.auth-card .login-heading {
+  margin-top: 8px;
+}
+
+.auth-card .login-heading h2 {
+  margin-bottom: 10px;
+}
+
+.auth-card .login-heading p {
+  line-height: 1.6;
+}
+
+.auth-card .form-group {
+  margin-bottom: 22px;
+}
+
+.auth-card .login-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-success {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 13px;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.auth-success svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.auth-back {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.auth-back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #2457c5;
+  font-size: 13px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.auth-back a:hover {
+  color: #1946a5;
+  text-decoration: underline;
+}
+
+.auth-button-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.auth-button-link:hover {
+  text-decoration: none;
+}
+
+.auth-card .input-container {
+  min-height: 50px;
+}
+
+.auth-card .input-container input {
+  min-width: 0;
+}
+
+.auth-card .toggle-password {
+  flex-shrink: 0;
+}
+
+@keyframes authFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 28px 22px;
+  }
+
+  .auth-card .login-heading p {
+    font-size: 13px;
+  }
+}
+
+.login-logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
 }

@@ -6,7 +6,7 @@ import {
   garantirAvaliacoesDaTurma
 } from "../services/assessmentService.js";
 
-//cadastrar avaliação
+// Cadastrar avaliação
 export async function createAssessment(req, res, next) {
   try {
     const assessment = await createAssessmentService(
@@ -23,7 +23,7 @@ export async function createAssessment(req, res, next) {
   }
 }
 
-//listar avaliações de uma turma
+// Listar avaliações de uma turma
 export async function listAssessments(req, res, next) {
   try {
     const { classId } = req.params;
@@ -46,7 +46,7 @@ export async function listAssessments(req, res, next) {
   }
 }
 
-//editar avaliação
+// Editar avaliação
 export async function updateAssessment(req, res, next) {
   try {
     const { id } = req.params;
@@ -66,7 +66,7 @@ export async function updateAssessment(req, res, next) {
   }
 }
 
-//excluir avaliação
+// Excluir avaliação
 export async function deleteAssessment(req, res, next) {
   try {
     const { id } = req.params;

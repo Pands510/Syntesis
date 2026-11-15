@@ -169,7 +169,7 @@ export async function changeStudentStatus(req, res) {
     const student = await updateStudentStatus(id, { status });
 
     return res.status(200).json({
-      mensagem: "Situação acadêmica atualizada com sucesso!", //literalmente eu trancando o curso
+      mensagem: "Situação acadêmica atualizada com sucesso!",
       aluno: student
     });
 

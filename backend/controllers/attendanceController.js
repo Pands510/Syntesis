@@ -8,11 +8,11 @@ import {
   listMyAttendance as listMyAttendanceService
 } from "../services/attendanceService.js";
 
-//consultar calendário de aulas
+// Consultar calendário de aulas
 export async function listAttendanceDates(req, res, next) {
   try {
     const { classId } = req.params;
-    const { startDate, endDate } = req.query; //na minha máquina funciona, só Deus sabe se qnd publicar tbm vai
+    const { startDate, endDate } = req.query;
 
     const result = await listAttendanceDatesService(
       classId,
@@ -27,7 +27,7 @@ export async function listAttendanceDates(req, res, next) {
   }
 }
 
-//consultar alunos e frequência de uma data
+// Consultar alunos e frequência de uma data
 export async function listAttendanceByDate(req, res, next) {
   try {
     const { classId } = req.params;
@@ -45,7 +45,7 @@ export async function listAttendanceByDate(req, res, next) {
   }
 }
 
-//registrar frequência individual
+// Registrar frequência individual
 export async function registerAttendance(req, res, next) {
   try {
     const result = await registerAttendanceService(
@@ -62,7 +62,7 @@ export async function registerAttendance(req, res, next) {
   }
 }
 
-//registrar frequência em lote
+// Registrar frequência em lote
 export async function registerAttendanceBatch(req, res, next) {
   try {
     const result = await registerAttendanceBatchService(
@@ -79,7 +79,7 @@ export async function registerAttendanceBatch(req, res, next) {
   }
 }
 
-//consultar total de faltas
+// Consultar total de faltas
 export async function countStudentAbsences(req, res, next) {
   try {
     const { enrollmentId } = req.params;
@@ -97,7 +97,7 @@ export async function countStudentAbsences(req, res, next) {
   }
 }
 
-//consultar frequências do aluno autenticado
+// Consultar frequências do aluno autenticado
 export async function listMyAttendance(req, res, next) {
   try {
     const result = await listMyAttendanceService(req.user);

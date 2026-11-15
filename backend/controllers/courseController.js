@@ -17,7 +17,7 @@ export async function getCourses(req, res) {
 
   } catch (error) {
     console.error("Erro ao listar cursos:", error);
-    //q o service esteja certo, amém
+
     return res.status(error.statusCode || 500).json({
       mensagem: error.statusCode
         ? error.message
@@ -35,7 +35,7 @@ export async function registerCourse(req, res) {
         mensagem: "O nome do curso é obrigatório."
       });
     }
-    //tava com sono o suficiente pra lembrar, oq importa é que tá funcionando(eu acho)
+
     const course = await createCourse({
       name: name.trim(),
       code: code?.trim() || null,
@@ -73,7 +73,7 @@ export async function enrollStudentInCourse(req, res) {
 
     return res.status(200).json({
       mensagem: "Aluno vinculado ao curso com sucesso!",
-      aluno: student//retorna o aluno modificado
+      aluno: student
     });
 
   } catch (error) {

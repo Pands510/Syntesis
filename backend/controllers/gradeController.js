@@ -7,7 +7,7 @@ import {
   getStudentReport as getStudentReportService
 } from "../services/gradeService.js";
 
-//lançar nota individual
+// Lançar nota individual
 export async function createGrade(req, res, next) {
   try {
     const grade = await createGradeService(
@@ -24,8 +24,7 @@ export async function createGrade(req, res, next) {
   }
 }
 
-//lançar várias notas em lote
-//não julgue minha gambiarra
+// Lançar várias notas em lote
 export async function createGradesBatch(req, res, next) {
   try {
     const result = await createGradesBatchService(
@@ -42,7 +41,7 @@ export async function createGradesBatch(req, res, next) {
   }
 }
 
-//lançar ou atualizar notas da prova final em lote
+// Lançar ou atualizar notas da prova final em lote
 export async function createFinalExamGradesBatch(req, res, next) {
   try {
     const result = await createFinalExamGradesBatchService(
@@ -59,7 +58,7 @@ export async function createFinalExamGradesBatch(req, res, next) {
   }
 }
 
-//listar notas de uma turma
+// Listar notas de uma turma
 export async function listGrades(req, res, next) {
   try {
     const { classId } = req.params;
@@ -78,7 +77,7 @@ export async function listGrades(req, res, next) {
   }
 }
 
-//atualizar nota individual
+// Atualizar nota individual
 export async function updateGrade(req, res, next) {
   try {
     const { id } = req.params;
@@ -98,13 +97,13 @@ export async function updateGrade(req, res, next) {
   }
 }
 
-//consultar boletim do aluno
+// Consultar boletim do aluno
 export async function getStudentReport(req, res, next) {
   try {
     const boletim = await getStudentReportService(req.user);
 
     return res.status(200).json({
-      total: boletim.length, //papo de qrr trancar o curso
+      total: boletim.length,
       boletim
     });
   } catch (error) {

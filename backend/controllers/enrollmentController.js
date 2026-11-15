@@ -5,7 +5,7 @@ import {
   updateEnrollmentStatus
 } from "../services/enrollmentService.js";
 
-//matricular aluno em uma turma
+// Matricular aluno em uma turma
 export async function registerEnrollment(req, res) {
   try {
     const { studentId, classId } = req.body;
@@ -42,10 +42,10 @@ export async function registerEnrollment(req, res) {
   }
 }
 
-//listar matrículas conforme o perfil do usuário
+// Listar matrículas
+// Listar matrículas conforme o perfil do usuário autenticado
 export async function getEnrollments(req, res) {
   try {
-    //francamente, tudo envolvendo service eu to jogando pra Deus
     const enrollments = await listEnrollments(req.user);
 
     return res.status(200).json({
@@ -63,7 +63,7 @@ export async function getEnrollments(req, res) {
   }
 }
 
-//alterar status de uma matrícula
+// Alterar status de uma matrícula
 export async function changeEnrollmentStatus(req, res) {
   try {
     const { id } = req.params;

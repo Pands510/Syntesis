@@ -1,7 +1,8 @@
 import {
   createStudent,
   getStudentProfile,
-  getMyEnrollments
+  getMyEnrollments,
+  getProfessorProfile
 } from "../services/userService.js";
 
 export async function registerStudent(req, res) {
@@ -46,8 +47,7 @@ export async function registerStudent(req, res) {
     }
 
     let parsedSemester = null;
-    //no outro arquivo o semestre era obrigatório.aqui ele aceita vazio e vira null. 
-    //aluno de shrodinger
+
     if (semester !== undefined && semester !== null && semester !== "") {
       parsedSemester = Number(semester);
 
@@ -135,6 +135,31 @@ export async function getMyStudentEnrollments(req, res) {
       mensagem: error.statusCode
         ? error.message
         : "Erro interno ao consultar matrículas."
+    });
+  }
+}
+
+// Consulta os dados profissionais do professor autenticado
+export async function getMyProfessorProfile(req, res) {
+  try {
+    const professor = await getProfessorProfile(req.user.id);
+
+    if (!professor) {
+      return res.status(404).json({
+        mensagem: "Perfil profissional não encontrado."
+      });
+    }
+
+    return res.status(200).json({
+      mensagem: "Perfil profissional encontrado com sucesso!",
+      professor
+    });
+
+  } catch (error) {
+    console.error("Erro ao consultar perfil do professor:", error);
+
+    return res.status(500).json({
+      mensagem: "Erro interno ao consultar perfil profissional."
     });
   }
 }

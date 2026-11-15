@@ -107,7 +107,7 @@ export async function registerProfessor(req, res) {
   }
 }
 
-//listar professores
+// Listar professores
 export async function getProfessors(req, res) {
   try {
     const professors = await listProfessors();
@@ -164,7 +164,7 @@ export async function editProfessor(req, res) {
         mensagem: "Selecione uma disciplina para o professor."
       });
     }
-    //mais gambiarra
+
     if (
       password !== undefined &&
       password !== "" &&
@@ -205,7 +205,7 @@ export async function editProfessor(req, res) {
     });
 
     return res.status(200).json({
-      mensagem: "Professor atualizado com sucesso!", //o fato de eu ter escrito "Professor updated com sucesso!" é preocupante
+      mensagem: "Professor atualizado com sucesso!",
       professor
     });
 

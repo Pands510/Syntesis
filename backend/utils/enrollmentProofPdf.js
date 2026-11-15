@@ -1,5 +1,14 @@
-
 import PDFDocument from "pdfkit";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const LOGO_PATH = path.resolve(
+  __dirname,
+  "../../frontend/public/brand/syntesis-logo.png"
+);
 
 const LEFT = 50;
 const RIGHT = 545;
@@ -83,49 +92,63 @@ export function generateEnrollmentProofPdf(data) {
     }
   });
 
-  // Cabeçalho institucional.
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(19)
-    .fillColor("#183B66")
-    .text("SYNTESIS", LEFT, 35, {
+// Cabeçalho institucional com a identidade visual Syntesis.
+const logoWidth = 76;
+const logoHeight = 76;
+
+doc.image(
+  LOGO_PATH,
+  LEFT + (CONTENT_WIDTH - logoWidth) / 2,
+  25,
+  {
+    fit: [logoWidth, logoHeight],
+    align: "center",
+    valign: "center"
+  }
+);
+
+doc
+  .font("Helvetica-Bold")
+  .fontSize(19)
+  .fillColor("#172554")
+  .text("SYNTESIS", LEFT, 103, {
+    width: CONTENT_WIDTH,
+    align: "center"
+  });
+
+doc
+  .font("Helvetica")
+  .fontSize(8)
+  .fillColor("#526174")
+  .text("SISTEMA DE EDUCAÇÃO", LEFT, 126, {
+    width: CONTENT_WIDTH,
+    align: "center"
+  });
+
+doc
+  .font("Helvetica-Bold")
+  .fontSize(15)
+  .fillColor("#172554")
+  .text("COMPROVANTE DE MATRÍCULA", LEFT, 151, {
+    width: CONTENT_WIDTH,
+    align: "center"
+  });
+
+doc
+  .font("Helvetica")
+  .fontSize(8)
+  .fillColor("#526174")
+  .text(
+    "Documento de comprovação de vínculo acadêmico",
+    LEFT,
+    172,
+    {
       width: CONTENT_WIDTH,
       align: "center"
-    });
+    }
+  );
 
-  doc
-    .font("Helvetica")
-    .fontSize(8)
-    .fillColor("#526174")
-    .text("SISTEMA DE EDUCAÇÃO", LEFT, 59, {
-      width: CONTENT_WIDTH,
-      align: "center"
-    });
-
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(15)
-    .fillColor("#172B45")
-    .text("COMPROVANTE DE MATRÍCULA", LEFT, 83, {
-      width: CONTENT_WIDTH,
-      align: "center"
-    });
-
-  doc
-    .font("Helvetica")
-    .fontSize(8)
-    .fillColor("#526174")
-    .text(
-      "Documento de comprovação de vínculo acadêmico",
-      LEFT,
-      104,
-      {
-        width: CONTENT_WIDTH,
-        align: "center"
-      }
-    );
-
-  doc.y = 127;
+doc.y = 195;
 
   // Identificação do aluno.
   drawSectionTitle(doc, "Identificação do aluno");

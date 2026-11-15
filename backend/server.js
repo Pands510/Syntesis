@@ -1,7 +1,7 @@
+import "dotenv/config";
 
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import prisma from "./database/prisma.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 
@@ -18,8 +18,7 @@ import gradeRoutes from "./routes/gradeRoutes.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
 import academicTermRoutes from "./routes/academicTermRoutes.js";
 import enrollmentProofRoutes from "./routes/enrollmentProofRoutes.js";
-
-dotenv.config();
+import announcementRoutes from "./routes/announcementRoutes.js";
 
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
   throw new Error(
@@ -53,6 +52,7 @@ app.use("/api/grades", gradeRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/academic-terms", academicTermRoutes);
 app.use("/api/enrollment-proofs", enrollmentProofRoutes);
+app.use("/api/announcements", announcementRoutes);
 
 app.get("/", (req, res) => {
   res.json({
